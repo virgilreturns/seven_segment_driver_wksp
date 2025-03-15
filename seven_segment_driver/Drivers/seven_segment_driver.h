@@ -12,3 +12,4 @@ enum ENUM_SEVSEG_CHAR {
 	, ENUM_SEVSEG_u, ENUM_SEVSEG_y
 };
 
+inline static uint8_t SEVSEG_GET_DATA(enum ENUM_SEVSEG_CHAR val);

@@ -199,7 +199,7 @@ static void MX_SPI2_Init(void)
   */
 static void MX_USART2_UART_Init(void)
 {
-
+                                                   
   /* USER CODE BEGIN USART2_Init 0 */
 
   /* USER CODE END USART2_Init 0 */
@@ -224,7 +224,7 @@ static void MX_USART2_UART_Init(void)
   /* USER CODE END USART2_Init 2 */
 
 }
-
+z 
 /**
   * @brief GPIO Initialization Function
   * @param None
