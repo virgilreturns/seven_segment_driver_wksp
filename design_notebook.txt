@@ -1,2 +1,10 @@
 3/17/2025
-  The 74HC595 shift register will be driver 7 LEDs. It has a max total output
+  The 74HC595 shift register will be driving up to 7 LEDs. It has a max total output of 70 mA and 35 mA for a single pin.
+  With 7 LEDs, the maximum individual output pin current is 6.25 mA which can be achieved with 560 ohm resistor in series with
+  the diode.
+
+  TESTING REQ: See how much current provides a satisfactory brightness. Consider a transistor based circuit to drive more
+  power for the LEDs, 
+
+  Continue to test shift register with 3mm LEDs for now. Need to fix circuit and use 10k+ pull-up/pulldown resistors for
+  SRCLOCK, RCLOCK, and SER. SRCLEAR tied to Vcc and OE tied to GND.  
