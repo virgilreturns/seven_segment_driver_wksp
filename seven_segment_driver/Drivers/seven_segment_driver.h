@@ -1,6 +1,6 @@
 #include "main.h"
 
-enum ENUM_SEVSEG_CHAR {
+enum ENUM_SEVSEG_CHAR { //enum vs #define, more overhead but prefer the type safety
     ENUM_SEVSEG_0 = 0x3F, // 0
     ENUM_SEVSEG_1 = 0x06, // 1
     ENUM_SEVSEG_2 = 0x5B, // 2
