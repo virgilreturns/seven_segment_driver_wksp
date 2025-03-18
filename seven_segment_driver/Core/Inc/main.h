@@ -35,6 +35,7 @@ extern "C" {
 #include <stdint.h>
 #include "debounce_driver.h"
 #include <stdbool.h>
+#include "stm32f401xe.h"
 
 /* USER CODE END Includes */
 
