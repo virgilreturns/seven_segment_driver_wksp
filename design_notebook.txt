@@ -10,5 +10,12 @@
   SRCLOCK, RCLOCK, and SER. SRCLEAR tied to Vcc and OE tied to GND.  
 
   TEST REVIEW:  Extreme debounce on all pushbuttons and dip switches :(((
-                Overall shift register seems to work fine.
+                Overall, shift register seems to work fine.
+  
+  UPCOMING TASKS:
+  - Test shift register with 7 segment display, continue using 680 ohm resistors
+  - (OPTIONAL) create separate 7 segment display on proto board with resistors and header pins
+  - Test SPI communication with shift register and 3mm LEDs
+  - Implement SPI communication with shift register and 7 segment display
+
   
