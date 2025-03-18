@@ -103,6 +103,8 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
+	  HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0); // example of reading a GPIO pin
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
