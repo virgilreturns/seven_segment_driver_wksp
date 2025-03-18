@@ -8,3 +8,7 @@
 
   Continue to test shift register with 3mm LEDs for now. Need to fix circuit and use 10k+ pull-up/pulldown resistors for
   SRCLOCK, RCLOCK, and SER. SRCLEAR tied to Vcc and OE tied to GND.  
+
+  TEST REVIEW:  Extreme debounce on all pushbuttons and dip switches :(((
+                Overall shift register seems to work fine.
+  
