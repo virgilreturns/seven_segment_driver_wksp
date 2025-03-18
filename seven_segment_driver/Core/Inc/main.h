@@ -32,6 +32,7 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "seven_segment_driver.h"
+#include <stdint.h>
 #include "debounce_driver.h"
 #include <stdbool.h>
 
