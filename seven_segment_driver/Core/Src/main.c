@@ -102,8 +102,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
-	  HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0); // example of reading a GPIO pin
+    GPIO_DebounceReadPin(BUTTON1_Pin, BUTTON1_Pin);
 
     /* USER CODE BEGIN 3 */
   }
