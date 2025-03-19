@@ -1,17 +1,16 @@
 #include "GPIO_driver.h"
 
 
-// ISR should call every CHECK_PERIOD ms
-void GPIO_DigitalRead(Switch_TypeDef* switch) {
+GPIO_PinState GPIO_DigitalRead(Switch_TypeDef* button) {
 
-	static uint8_t raw = HAL_GPIO_ReadPin(switch->port, switch->pin);
-	if (raw == 0) switch->integrator > 0 ? switch->integrator--;
-	else if (switch->integrator < INTEGRATOR_MAXIMUM) switch->integrator++;
+	static uint8_t raw = HAL_GPIO_ReadPin(button->port, button->pin);
+	if (raw == 0) button->integrator > 0 ? button->integrator--;
+	else if (button->integrator < INTEGRATOR_MAXIMUM) button->integrator++;
 
-	if (switch->integrator == 0)
+	if (button->integrator == 0)
 		return GPIO_PIN_RESET;
-	else if (switch->integrator >= INTEGRATOR_MAXIMUM) {
-		switch->integrator = INTEGRATOR_MAXIMUM;
+	else if (button->integrator >= INTEGRATOR_MAXIMUM) {
+		button->integrator = INTEGRATOR_MAXIMUM;
 		return GPIO_PIN_SET;
 	}
 }

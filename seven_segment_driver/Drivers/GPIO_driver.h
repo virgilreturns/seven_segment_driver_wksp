@@ -1,4 +1,6 @@
 #include "main.h"
+#include <stdbool.h>
+#include <stdint.h>
 
 
 #define CHECK_PERIOD 5
@@ -8,13 +10,13 @@
 
 //using input pin struct for scalability
 typedef struct {
-	GPIO_TypeDef* port;
+	GPIO_TypeDef port;
 	uint16_t pin;
 	uint8_t integrator;
-	bool SwitchActivated;
+	bool switch_activated;
 } Switch_TypeDef;
 
-void GPIO_DigitalRead(Switch_TypeDef* switch);
+GPIO_PinState GPIO_DigitalRead(Switch_TypeDef* button);
 
 
 
