@@ -45,6 +45,7 @@ SPI_HandleTypeDef hspi2;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
+Switch_TypeDef button1 = { BUTTON1_GPIO_Port, BUTTON1_Pin, 0, false };
 
 /* USER CODE END PV */
 
@@ -102,7 +103,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+  
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -286,6 +287,12 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+	if (GPIO_Pin == BUTTON1_Pin) {
+		GPIO_DigitalRead(&button1);
+	}
+}
 
 /* USER CODE END 4 */
 

@@ -12,7 +12,7 @@ typedef struct {
 	bool SwitchActivated;
 } Switch_TypeDef;
 
+GPIO_PinState GPIO_DigitalRead(Switch_TypeDef*);
 
-bool GPIO_DigitalRead(GPIO_TypeDef* port, uint16_t pin, uint8_t* integrator) {}
 
 
