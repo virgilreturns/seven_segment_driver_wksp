@@ -2,18 +2,17 @@
 
 
 // ISR should call every CHECK_MSEC
-static inline bool GPIO_DigitalRead(GPIO_TypeDef* port, uint16_t pin) {
-	static bool isDebounced = false;
-	static
+static inline GPIO_PinState GPIO_DigitalRead(Switch_TypeDef* switch) {
 
+	static uint8_t raw = HAL_GPIO_ReadPin(switch->port, switch->pin);
+	if (raw == 0) switch->integrator > 0 ? switch->integrator--;
+	else if (switch->integrator < INTEGRATOR_MAXIMUM) switch->integrator++;
 
-
-	
-
-
-	//debounce control, change state type or return (condition) to fine tune
-	static uint32_t State = 0;
-	State = (State << 1) | HAL_GPIO_ReadPin(port, pin) | 0xFFFE0000;
-	return (State == 0xFFFF0000);
+	if (switch->integrator == 0)
+		return GPIO_PIN_RESET;
+	else if (switch->integrator >= INTEGRATOR_MAXIMUM) {
+		switch->integrator = INTEGRATOR_MAXIMUM;
+		return GPIO_PIN_SET;
+	}
 }
 
