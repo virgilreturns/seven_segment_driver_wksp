@@ -13,6 +13,6 @@ typedef struct {
 } Switch_TypeDef;
 
 
-bool GPIO_DigitalRead(GPIO_TypeDef* port, uint16_t pin, uint8_t* integrator) {
+bool GPIO_DigitalRead(GPIO_TypeDef* port, uint16_t pin, uint8_t* integrator) {}
 
-}
+

@@ -1,7 +1,7 @@
 #include "GPIO_driver.h"
 
 
-// ISR should call every CHECK_MSEC
+// ISR should call every CHECK_PERIOD ms
 static inline GPIO_PinState GPIO_DigitalRead(Switch_TypeDef* switch) {
 
 	static uint8_t raw = HAL_GPIO_ReadPin(switch->port, switch->pin);

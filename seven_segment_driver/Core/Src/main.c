@@ -79,7 +79,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+    
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -102,7 +102,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-    GPIO_DebounceReadPin(BUTTON1_Pin, BUTTON1_Pin);
+    
 
     /* USER CODE BEGIN 3 */
   }
