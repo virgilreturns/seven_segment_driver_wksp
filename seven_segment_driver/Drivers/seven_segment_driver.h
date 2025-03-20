@@ -1,3 +1,6 @@
+#ifndef __SEVEN_SEGMENT_DRIVER_H
+#define __SEVEN_SEGMENT_DRIVER_H
+
 #include "main.h"
 
 enum ENUM_SEVSEG_CHAR { //enum vs #define, more overhead but prefer the type safety
@@ -29,4 +32,6 @@ enum ENUM_SEVSEG_CHAR { //enum vs #define, more overhead but prefer the type saf
     ENUM_SEVSEG_y = 0x6E  // y
 };
 
-static inline void SEVSEG_READ();
+HAL_StatusTypeDef SEVSEG_WRITE(enum ENUM_SEVSEG_CHAR data, SPI_HandleTypeDef* spi_handler);
+
+#endif
