@@ -31,11 +31,12 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "seven_segment_driver.h"
 #include <stdint.h>
+#include "seven_segment_driver.h"
 #include "GPIO_driver.h"
 #include <stdbool.h>
 #include "stm32f401xe.h"
+
 
 /* USER CODE END Includes */
 
