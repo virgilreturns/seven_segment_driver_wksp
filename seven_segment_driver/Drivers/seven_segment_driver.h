@@ -33,6 +33,18 @@ enum ENUM_SEVSEG_CHAR { // MUST BE INVERTED TO USE WITH COMMON ANODE DISPLAY (LT
     ENUM_SEVSEG_y = 0x6E    // y
 };
 
-HAL_StatusTypeDef SEVSEG_WRITE(enum ENUM_SEVSEG_CHAR data, SPI_HandleTypeDef* spi_handler);
+extern const enum ENUM_SEVSEG_CHAR ENUM_SEVSEG_CHAR_Index[24];
+
+typedef struct {
+	const SPI_HandleTypeDef* spi_handler;
+	const GPIO_TypeDef* CS_port;
+	const uint8_t CS_pin;
+    const GPIO_TypeDef* RES_port;
+    const uint8_t RES_pin;
+	uint8_t char_index; // index of character to be displayed
+} SEVSEG_TypeDef;
+
+
+HAL_StatusTypeDef SEVSEG_Write(enum ENUM_SEVSEG_CHAR data, SPI_HandleTypeDef* spi_handler);
 
 #endif

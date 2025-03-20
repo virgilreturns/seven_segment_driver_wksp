@@ -19,6 +19,30 @@
   - Test SPI communication with shift register and 3mm LEDs
   - Implement SPI communication with shift register and 7 segment display
 
+3/20/2025
+  - Successfully tested shift register with 7 segment display. It works as expected.
+  - Need to implement SPI communication with the shift register and the 7 segment display.
+ 
+  - further ideas for UI implementation:
 
+ /* ------------------one button config----------------------
+	One button is used to cycle through all of the seven_segment characters
+	Straight forward and pin resourceful.
+*/
 
+ /* ------------------two button config / rotary encoder ----------------------
+	Two buttons are used to cycle through all of the seven_segment characters
+	Button 1: cycles forward
+	Button 2: cycles backwards
+	More intuitive than one button, but uses more pins.
+*/
+ /* ------------------switch encoding config----------------------
+	4 dip switches are used to select a specific character to display on the seven_segment.
+	Faster to select a specific character, but requires more pins, and a documentation of the encoding.
+	Up to number 9 will be in binary, and the other characters can be attained via documentation.
+*/
 
+  Keep 8 diode testing setup for testing with SPI functions
+  Finished basic seven segment byte transmission code.
+
+  Interested in implementing code for the UI configs
