@@ -47,4 +47,27 @@
 
   Interested in implementing code for the UI configs
 
+
+3/21/2025
+
+ Started soldering circuit unto protoboard, probably a bad idea because
+ I just had another fantastic idea for an implementation of the project.
+
+ 2 button config, one button to cycle through characters, and the other to cycle through the digits.
+ This creates a sort of text editor for the seven segment display.
+
+ Other caveats, will need multiplexing with multiple digits, (selecting which VCC to turn on)
+ While I only really want no more than 4 digits, I can use a timer to "play" the digits, and shift
+ the data through the display. I.E. with 4 digits, I can display a 20 character string by shifting the characters through an array,
+ then displaying the array on the 4 digits.
+
+ I can have a timer between configuration and "play" mode, hence if there is no configuration for a certain amount of time, the display will
+ start playing the string.
+
+ The first button press of either configuration button will start the configuration mode, and then they will
+ function as normal. The display will default to play mode after a certain amount of time of inactivity.
+
+ Other features: A dip switch -> change how many digits are shifted at a time, FULL DISPLAY or BYTE-WISE shifting.
+				 -> how big the string can be
+
   TESTING: Using Analog Discovery 3 (AD3) to read button bounce signal, familizarize with oscilloscope
