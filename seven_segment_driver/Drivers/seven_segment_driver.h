@@ -1,10 +1,17 @@
 #ifndef __SEVEN_SEGMENT_DRIVER_H
 #define __SEVEN_SEGMENT_DRIVER_H
 
-
-
 #include "main.h"
 
+#ifdef SEVSEG_QTY_DIGITS
+#if SEVSEG_QTY_DIGITS > 8
+	#undef SEVSEG_QTY_DIGITS
+	#define SEVSEG_QTY_DIGITS 8
+#elif SEVSEG_QTY_DIGITS < 1
+	#undef SEVSEG_QTY_DIGITS
+	#define SEVSEG_QTY_DIGITS 1
+#endif
+#endif
 
 enum ENUM_SEVSEG_CHAR
 enum ENUM_SEVSEG_DIGIT { //digit index

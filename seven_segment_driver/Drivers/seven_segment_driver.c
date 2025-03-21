@@ -56,11 +56,6 @@
   ******************************************************************************
   */
 
-
-
-
-/
-
 #include "seven_segment_driver.h"
 
 volatile enum ENUM_SEVSEG_CHAR data[SEVSEG_QTY_DIGITS] = { ENUM_SEVSEG_H, ENUM_SEVSEG_E, ENUM_SEVSEG_L, ENUM_SEVSEG_L, ENUM_SEVSEG_o };
