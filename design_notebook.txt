@@ -70,4 +70,14 @@
  Other features: A dip switch -> change how many digits are shifted at a time, FULL DISPLAY or BYTE-WISE shifting.
 				 -> how big the string can be
 
-  TESTING: Using Analog Discovery 3 (AD3) to read button bounce signal, familizarize with oscilloscope
+ TESTING: Using Analog Discovery 3 (AD3) to read button bounce signal, familizarize with oscilloscope
+
+ Completed:
+	-refactored code to support multiple digit display
+	-default data will be "Hello"
+ 
+ TESTING REQ:
+    -INTEGRATED TESTS: SHIFT REGISTER + 7 SEGMENT DISPLAY, (basic test) make sure digital 0 actually is ground
+					: SHIFT REGISTER + 5 DIGIT 7 SEGMENT DISPLAY (include Digit Select)
+					: SPI COMMUNICATION WITH SHIFT REGISTER + 7 SEGMENT DISPLAY (1 digit, 1 character)
+					: SPI COMMUNICATION WITH SHIFT REGISTER + 5 DIGIT 7 SEGMENT DISPLAY (use full data buf)

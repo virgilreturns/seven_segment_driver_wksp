@@ -1,8 +1,5 @@
 #include "main.h"
 
-
-
-
 #define CHECK_PERIOD 5
 #define DEBOUNCE_TIME 0.200 // seconds
 #define INTEGRATOR_MAXIMUM ((CHECK_PERIOD)*(DEBOUNCE_TIME))
