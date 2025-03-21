@@ -24,15 +24,13 @@ HAL_StatusTypeDef SEVSEG_DigitTx(SEVSEG_DISPLAY_TypeDef* sevseg, enum ENUM_SEVSE
 
 //FIRST DEMO IMPLREMENTATION: NO 'PLAY' MODE, JUST WRITE 5 CHAR TO 5 DIGIT DISPLAY
 HAL_StatusTypeDef SEVSEG_Write(SEVSEG_DISPLAY_TypeDef* sevseg) {
+	HAL_StatusTypeDef success;
 	for (i=0; i < SEVSEG_QTY_DIGITS; i++) {
-		SEVSEG_DigitTx(sevseg, i); }
+		success = SEVSEG_DigitTx(sevseg, i);
+		if success != HAL_OK) return success;
+	}
+	return success;
 };
-
-void SEVSEG_Reset(SEVSEG_TypeDef* sevseg, GPIO_TypeDef* RES_port, uint8_t RES_pin)
-{
-	HAL_GPIO_WritePin(sevseg->RES_port, sev->RES_pin, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(sevseg->RES_port, sevseg->RES_pin, GPIO_PIN_SET);
-}
 
 const enum ENUM_SEVSEG_CHAR sevseg_chars[] = {
         ENUM_SEVSEG_0, ENUM_SEVSEG_1, ENUM_SEVSEG_2, ENUM_SEVSEG_3, ENUM_SEVSEG_4,
