@@ -33,7 +33,7 @@ enum ENUM_SEVSEG_CHAR { // COMMON ANODE, MSB
 };
 
 
-extern const enum ENUM_SEVSEG_CHAR ENUM_SEVSEG_CHAR_Index[24];
+extern const enum ENUM_SEVSEG_CHAR ENUM_SEVSEG_CHAR_Index[];
 
 typedef struct {
 	const SPI_HandleTypeDef* spi_handler;
