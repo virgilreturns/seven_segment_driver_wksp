@@ -1,6 +1,8 @@
 #ifndef __SEVEN_SEGMENT_DRIVER_H
 #define __SEVEN_SEGMENT_DRIVER_H
 
+#define SEVSEG_QTY_DIGITS 5
+
 #include "main.h"
 
 enum ENUM_SEVSEG_CHAR { // COMMON ANODE, MSB
@@ -22,6 +24,7 @@ enum ENUM_SEVSEG_CHAR { // COMMON ANODE, MSB
 	ENUM_SEVSEG_f = 0x8E,
 	ENUM_SEVSEG_H = 0x89,
 	ENUM_SEVSEG_J = 0xE1,
+	ENUM_SEVSEG_L = 0xC7,
 	ENUM_SEVSEG_n = 0xBB,
 	ENUM_SEVSEG_o = 0xA3,
 	ENUM_SEVSEG_p = 0x8C,
@@ -31,20 +34,33 @@ enum ENUM_SEVSEG_CHAR { // COMMON ANODE, MSB
 	ENUM_SEVSEG_v = 0xE3,
 	ENUM_SEVSEG_null = 0xFF
 };
-
+enum ENUM_SEVSEG_DIGIT { //digit index
+	ENUM_SEVSEG_DIGIT_0 = 0,
+	ENUM_SEVSEG_DIGIT_1 = 1,
+	ENUM_SEVSEG_DIGIT_2 = 2,
+	ENUM_SEVSEG_DIGIT_3 = 3,
+	ENUM_SEVSEG_DIGIT_4 = 4,
+	ENUM_SEVSEG_DIGIT_5 = 5,
+	ENUM_SEVSEG_DIGIT_6 = 6,
+	ENUM_SEVSEG_DIGIT_7 = 7
+};
 
 extern const enum ENUM_SEVSEG_CHAR ENUM_SEVSEG_CHAR_Index[];
 
 typedef struct {
+	const GPIO_TypeDef* DS_port;
+	const uint16_t DS_pin;
+	enum ENUM_SEVSEG_CHAR char_data; //when programming UI, make sure to use the array to incrementally select
+} SEVSEG_DS_PIN;
+
+typedef struct {
 	const SPI_HandleTypeDef* spi_handler;
-	const GPIO_TypeDef* CS_port;
-	const uint8_t CS_pin;
-    const GPIO_TypeDef* RES_port;
-    const uint8_t RES_pin;
-	uint8_t char_index; // index of character to be displayed
-} SEVSEG_TypeDef;
+	const SEVSEG_DS_PIN digit_select[SEVSEG_QTY_DIGITS];
+} SEVSEG_DISPLAY_TypeDef;
 
 
-HAL_StatusTypeDef SEVSEG_Write(enum ENUM_SEVSEG_CHAR data, SPI_HandleTypeDef* spi_handler);
+void SEVSEG_StoreDataBuf(SEVSEG_DISPLAY_TypeDef* seveg, enum ENUM_SEVSEG_CHAR data[]);
+HAL_StatusTypeDef SEVSEG_DigitTx(SEVSEG_DISPLAY_TypeDef* sevseg, enum ENUM_SEVSEG_DIGIT digit);
+HAL_StatusTypeDef SEVSEG_Write(SEVSEG_DISPLAY_TypeDef* sevseg);
 
 #endif

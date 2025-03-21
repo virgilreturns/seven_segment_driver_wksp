@@ -84,6 +84,9 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN Private defines */
 
+#define SPI_CS1_Pin GPIO_PIN_6
+#define SPI_CS1_Port GPIOB
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
