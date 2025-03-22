@@ -38,7 +38,6 @@ typedef struct {
 	const SEVSEG_DS_PIN digit_select[SEVSEG_QTY_DIGITS];
 } SEVSEG_DISPLAY_TypeDef;
 
-
 void SEVSEG_StoreDataBuf(SEVSEG_DISPLAY_TypeDef* seveg, enum ENUM_SEVSEG_CHAR data[]);
 HAL_StatusTypeDef SEVSEG_DigitTx(SEVSEG_DISPLAY_TypeDef* sevseg, enum ENUM_SEVSEG_DIGIT digit);
 HAL_StatusTypeDef SEVSEG_Write(SEVSEG_DISPLAY_TypeDef* sevseg);
