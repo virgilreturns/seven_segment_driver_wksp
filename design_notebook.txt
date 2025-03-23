@@ -77,7 +77,8 @@
 	-default data will be "Hello"
  
  TESTING REQ:
-    -INTEGRATED TESTS: SHIFT REGISTER + 7 SEGMENT DISPLAY, (basic test) make sure digital 0 actually is ground
-					: SHIFT REGISTER + 5 DIGIT 7 SEGMENT DISPLAY (include Digit Select)
+    -INTEGRATED TESTS: SHIFT REGISTER + 7 SEGMENT DISPLAY, (basic test) make sure digital 0 actually is ground (COMPLETED 3/21/2025)
+					: SHIFT REGISTER + 5 DIGIT 7 SEGMENT DISPLAY (include Digit Select) 
 					: SPI COMMUNICATION WITH SHIFT REGISTER + 7 SEGMENT DISPLAY (1 digit, 1 character)
 					: SPI COMMUNICATION WITH SHIFT REGISTER + 5 DIGIT 7 SEGMENT DISPLAY (use full data buf)
+
