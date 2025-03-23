@@ -13,7 +13,8 @@
 #endif
 #endif
 
-enum ENUM_SEVSEG_CHAR
+enum ENUM_SEVSEG_CHAR;
+
 enum ENUM_SEVSEG_DIGIT { //digit index
 	ENUM_SEVSEG_DIGIT_0 = 0,
 	ENUM_SEVSEG_DIGIT_1 = 1,

@@ -33,7 +33,6 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 #include <stdint.h>
 #include "seven_segment_driver.h"
-#include "GPIO_driver.h"
 #include <stdbool.h>
 #include "stm32f401xe.h"
 
@@ -72,15 +71,22 @@ void Error_Handler(void);
 #define USART_RX_GPIO_Port GPIOA
 #define LD2_Pin GPIO_PIN_5
 #define LD2_GPIO_Port GPIOA
+#define DIGIT_3_SEL_Pin GPIO_PIN_6
+#define DIGIT_3_SEL_GPIO_Port GPIOC
+#define DIGIT_1_SEL_Pin GPIO_PIN_8
+#define DIGIT_1_SEL_GPIO_Port GPIOC
+#define DIGIT_0_SEL_Pin GPIO_PIN_9
+#define DIGIT_0_SEL_GPIO_Port GPIOC
 #define TMS_Pin GPIO_PIN_13
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14
 #define TCK_GPIO_Port GPIOA
 #define SWO_Pin GPIO_PIN_3
 #define SWO_GPIO_Port GPIOB
-#define BUTTON1_Pin GPIO_PIN_4
-#define BUTTON1_GPIO_Port GPIOB
-#define BUTTON1_EXTI_IRQn EXTI4_IRQn
+#define DIGIT_2_SEL_Pin GPIO_PIN_8
+#define DIGIT_2_SEL_GPIO_Port GPIOB
+#define DIGIT_4_SEL_Pin GPIO_PIN_9
+#define DIGIT_4_SEL_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 
