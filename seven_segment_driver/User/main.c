@@ -95,8 +95,34 @@ int main(void)
   MX_USART2_UART_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
-  volatile enum ENUM_SEVSEG_CHAR data[SEVSEG_QTY_DIGITS] = { ENUM_SEVSEG_H, ENUM_SEVSEG_E, ENUM_SEVSEG_1, ENUM_SEVSEG_1, ENUM_SEVSEG_o };
+  volatile enum ENUM_SEVSEG_CHAR data[SEVSEG_QTY_DIGITS] = { ENUM_SEVSEG_CHAR_H, ENUM_SEVSEG_CHAR_E, ENUM_SEVSEG_CHAR_1, ENUM_SEVSEG_CHAR_1, ENUM_SEVSEG_CHAR_o };
 
+  SEVSEG_DIGIT_TypeDef DIGIT_0;
+  DIGIT_0.DS_pin = GPIO_PIN_9;
+  DIGIT_0.DS_port = GPIOC;
+  
+  SEVSEG_DIGIT_TypeDef DIGIT_1;
+  DIGIT_1.DS_pin = GPIO_PIN_8;
+  DIGIT_1.DS_port = GPIOC;
+
+  SEVSEG_DIGIT_TypeDef DIGIT_2;
+  DIGIT_2.DS_pin = GPIO_PIN_8;
+  DIGIT_2.DS_port = GPIOB;
+
+  SEVSEG_DIGIT_TypeDef DIGIT_3;
+  DIGIT_3.DS_pin = GPIO_PIN_6;
+  DIGIT_3.DS_port = GPIOC;
+
+  SEVSEG_DIGIT_TypeDef DIGIT_4;
+  DIGIT_4.DS_pin = GPIO_PIN_9;
+  DIGIT_4.DS_port = GPIOB;
+
+  SEVSEG_DISPLAY_TypeDef sevseg;
+  sevseg.spi_handler = &hspi2; 
+  sevseg.digit_select = { DIGIT_0, DIGIT_1, DIGIT_2, DIGIT_3, DIGIT_4 };
+  SEVSEG_StoreDataBuf(&sevseg, data);
+
+  HAL_StatusTypeDef success;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -104,7 +130,8 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+	  success = SEVSEG_Write(&sevseg)
+		  HAL_Delay(1000);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

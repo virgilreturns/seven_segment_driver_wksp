@@ -3,17 +3,9 @@
 
 #include "main.h"
 
-#ifdef SEVSEG_QTY_DIGITS
-#if SEVSEG_QTY_DIGITS > 8
-	#undef SEVSEG_QTY_DIGITS
-	#define SEVSEG_QTY_DIGITS 8
-#elif SEVSEG_QTY_DIGITS < 1
-	#undef SEVSEG_QTY_DIGITS
-	#define SEVSEG_QTY_DIGITS 1
-#endif
-#endif
+#define SEVSEG_QTY_DIGITS 5
 
-enum ENUM_SEVSEG_CHAR = { 
+enum ENUM_SEVSEG_CHAR {
 	ENUM_SEVSEG_CHAR_0 = 0x80,
 	ENUM_SEVSEG_CHAR_1 = 0xF9,
 	ENUM_SEVSEG_CHAR_2 = 0xA4,
@@ -42,7 +34,6 @@ enum ENUM_SEVSEG_CHAR = {
 	ENUM_SEVSEG_CHAR_Y = 0x91,
 	ENUM_SEVSEG_CHAR_Dash = 0xBF,
 	ENUM_SEVSEG_CHAR_Blank = 0xFF
-
 };
 
 enum ENUM_SEVSEG_DIGIT { //digit index
@@ -62,11 +53,11 @@ typedef struct {
 	const GPIO_TypeDef* DS_port;
 	const uint16_t DS_pin;
 	enum ENUM_SEVSEG_CHAR char_data; //when programming UI, make sure to use the array to incrementally select
-} SEVSEG_DS_PIN;
+} SEVSEG_DIGIT_TypeDef;
 
 typedef struct {
 	const SPI_HandleTypeDef* spi_handler;
-	const SEVSEG_DS_PIN digit_select[SEVSEG_QTY_DIGITS];
+	const SEVSEG_DIGIT_TypeDef digit_select[SEVSEG_QTY_DIGITS];
 } SEVSEG_DISPLAY_TypeDef;
 
 

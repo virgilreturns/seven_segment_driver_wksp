@@ -90,7 +90,7 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN Private defines */
 
-#define SEVSEG_QTY_DIGITS 5
+
 
 /* USER CODE END Private defines */
 

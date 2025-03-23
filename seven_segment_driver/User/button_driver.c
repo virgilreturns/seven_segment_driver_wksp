@@ -1,7 +1,7 @@
 #include "button_driver.h"
 
 
-GPIO_PinState GPIO_DigitalRead(Switch_TypeDef* button) {
+/* GPIO_PinState GPIO_DigitalRead(Switch_TypeDef* button) {
 
 	static uint8_t raw = HAL_GPIO_ReadPin(button->port, button->pin);
 	if (raw == 0) button->integrator > 0 ? button->integrator--;
@@ -14,4 +14,5 @@ GPIO_PinState GPIO_DigitalRead(Switch_TypeDef* button) {
 		return GPIO_PIN_SET;
 	}
 }
+*/
 
