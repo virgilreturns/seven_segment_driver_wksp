@@ -52,7 +52,7 @@ extern const enum ENUM_SEVSEG_CHAR ENUM_SEVSEG_CHAR_Index[];
 typedef struct {
 	const GPIO_TypeDef* DS_port;
 	const uint16_t DS_pin;
-	enum ENUM_SEVSEG_CHAR char_data; //when programming UI, make sure to use the array to incrementally select
+	enum ENUM_SEVSEG_CHAR char_data;
 } SEVSEG_DIGIT_TypeDef;
 
 typedef struct {
