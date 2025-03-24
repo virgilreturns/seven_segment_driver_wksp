@@ -95,7 +95,6 @@ int main(void)
   MX_USART2_UART_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
-  volatile enum ENUM_SEVSEG_CHAR data[SEVSEG_QTY_DIGITS] = { ENUM_SEVSEG_CHAR_H, ENUM_SEVSEG_CHAR_E, ENUM_SEVSEG_CHAR_1, ENUM_SEVSEG_CHAR_1, ENUM_SEVSEG_CHAR_o };
 
   SEVSEG_DIGIT_TypeDef DIGIT_0 = {
 		  .DS_pin = GPIO_PIN_9,
@@ -127,8 +126,11 @@ int main(void)
 		  .digit_select = { DIGIT_0, DIGIT_1, DIGIT_2, DIGIT_3, DIGIT_4 },
   };
 
-  SEVSEG_StoreDataBuf(&sevseg, data);
+  volatile enum ENUM_SEVSEG_CHAR data[SEVSEG_QTY_DIGITS] =
+  { ENUM_SEVSEG_CHAR_H, ENUM_SEVSEG_CHAR_E, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_o };
 
+  SEVSEG_StoreDataBuf(&sevseg, data);
+  SEVSEG_Write(sevseg)
   HAL_StatusTypeDef success;
   /* USER CODE END 2 */
 
