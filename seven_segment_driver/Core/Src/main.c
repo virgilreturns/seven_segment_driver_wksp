@@ -130,8 +130,9 @@ int main(void)
   { ENUM_SEVSEG_CHAR_H, ENUM_SEVSEG_CHAR_E, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_o };
 
   SEVSEG_StoreDataBuf(&sevseg, data);
-  SEVSEG_Write(sevseg)
+  SEVSEG_Write(&sevseg); // to be put into while loop
   HAL_StatusTypeDef success;
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -283,8 +284,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, SPI_LATCH_Pin|GPIO_PIN_4|GPIO_PIN_6|DIGIT_2_SEL_Pin
-                          |DIGIT_4_SEL_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, SPI_LATCH_Pin|DIGIT_2_SEL_Pin|DIGIT_4_SEL_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, DIGIT_3_SEL_Pin|DIGIT_1_SEL_Pin|DIGIT_0_SEL_Pin, GPIO_PIN_RESET);
@@ -302,10 +302,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : SPI_LATCH_Pin PB4 PB6 DIGIT_2_SEL_Pin
-                           DIGIT_4_SEL_Pin */
-  GPIO_InitStruct.Pin = SPI_LATCH_Pin|GPIO_PIN_4|GPIO_PIN_6|DIGIT_2_SEL_Pin
-                          |DIGIT_4_SEL_Pin;
+  /*Configure GPIO pins : SPI_LATCH_Pin DIGIT_2_SEL_Pin DIGIT_4_SEL_Pin */
+  GPIO_InitStruct.Pin = SPI_LATCH_Pin|DIGIT_2_SEL_Pin|DIGIT_4_SEL_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -317,6 +315,18 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : UI_SEL_Pin */
+  GPIO_InitStruct.Pin = UI_SEL_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(UI_SEL_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : UI_COUNTDOWN_Pin UI_COUNTUP_Pin */
+  GPIO_InitStruct.Pin = UI_COUNTDOWN_Pin|UI_COUNTUP_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
