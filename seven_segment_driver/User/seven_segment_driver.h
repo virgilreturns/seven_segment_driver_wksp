@@ -50,13 +50,13 @@ enum ENUM_SEVSEG_DIGIT { //digit index
 extern const enum ENUM_SEVSEG_CHAR ENUM_SEVSEG_CHAR_Index[];
 
 typedef struct {
-	const GPIO_TypeDef* DS_port;
-	const uint16_t DS_pin;
+	GPIO_TypeDef* DS_port;
+	uint16_t DS_pin;
 	enum ENUM_SEVSEG_CHAR char_data;
 } SEVSEG_DIGIT_TypeDef;
 
 typedef struct {
-	const SPI_HandleTypeDef* spi_handler;
+	SPI_HandleTypeDef* spi_handler;
 	SEVSEG_DIGIT_TypeDef digit_select[SEVSEG_QTY_DIGITS];
 } SEVSEG_DISPLAY_TypeDef;
 

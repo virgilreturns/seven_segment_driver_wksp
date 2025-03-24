@@ -61,6 +61,58 @@ static void MX_SPI2_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+volatile enum ENUM_SEVSEG_CHAR data[SEVSEG_QTY_DIGITS] =
+{ ENUM_SEVSEG_CHAR_H, ENUM_SEVSEG_CHAR_E, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_o };
+volatile enum ENUM_SEVSEG_DIGIT cursor_selection = ENUM_SEVSEG_DIGIT_0;
+
+void HAL_GPIO_EXTI_Callback(uint16_t pin){
+	switch (pin) {
+		case UI_COUNTUP_Pin:
+			break;
+		case UI_COUNTDOWN_Pin:
+			break;
+		case UI_CURSOR_Pin:
+			break;
+	}
+}
+
+
+SEVSEG_DIGIT_TypeDef DIGIT_0 = {
+		  .DS_pin = GPIO_PIN_9,
+		  .DS_port = GPIOC
+};
+
+SEVSEG_DIGIT_TypeDef DIGIT_1 = {
+		  .DS_pin = GPIO_PIN_8,
+		  .DS_port = GPIOC
+};
+
+SEVSEG_DIGIT_TypeDef DIGIT_2 = {
+		  .DS_pin = GPIO_PIN_8,
+		  .DS_port = GPIOB,
+};
+
+SEVSEG_DIGIT_TypeDef DIGIT_3 = {
+		  .DS_pin = GPIO_PIN_6,
+		  .DS_port = GPIOC,
+};
+
+SEVSEG_DIGIT_TypeDef DIGIT_4 = {
+		  .DS_pin = GPIO_PIN_9,
+		  .DS_port = GPIOB,
+};
+
+SEVSEG_DISPLAY_TypeDef sevseg = {
+		  .spi_handler = &hspi2
+		  //.digit_select = { DIGIT_0, DIGIT_1, DIGIT_2, DIGIT_3, DIGIT_4 },
+};
+sevseg.digit_select[0] = DIGIT_0;
+
+//SEVSEG_StoreDataBuf(&sevseg, data);
+//SEVSEG_Write(&sevseg); // to be put into while loop
+
+
+
 /* USER CODE END 0 */
 
 /**
@@ -96,42 +148,6 @@ int main(void)
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
 
-  SEVSEG_DIGIT_TypeDef DIGIT_0 = {
-		  .DS_pin = GPIO_PIN_9,
-		  .DS_port = GPIOC
-  };
-  
-  SEVSEG_DIGIT_TypeDef DIGIT_1 = {
-		  .DS_pin = GPIO_PIN_8,
-		  .DS_port = GPIOC
-  };
-
-  SEVSEG_DIGIT_TypeDef DIGIT_2 = {
-		  .DS_pin = GPIO_PIN_8,
-		  .DS_port = GPIOB,
-  };
-
-  SEVSEG_DIGIT_TypeDef DIGIT_3 = {
-		  .DS_pin = GPIO_PIN_6,
-		  .DS_port = GPIOC,
-  };
-
-  SEVSEG_DIGIT_TypeDef DIGIT_4 = {
-		  .DS_pin = GPIO_PIN_9,
-		  .DS_port = GPIOB,
-  };
-
-  SEVSEG_DISPLAY_TypeDef sevseg = {
-		  .spi_handler = &hspi2,
-		  .digit_select = { DIGIT_0, DIGIT_1, DIGIT_2, DIGIT_3, DIGIT_4 },
-  };
-
-  volatile enum ENUM_SEVSEG_CHAR data[SEVSEG_QTY_DIGITS] =
-  { ENUM_SEVSEG_CHAR_H, ENUM_SEVSEG_CHAR_E, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_o };
-
-  SEVSEG_StoreDataBuf(&sevseg, data);
-  SEVSEG_Write(&sevseg); // to be put into while loop
-  HAL_StatusTypeDef success;
 
   /* USER CODE END 2 */
 
@@ -316,19 +332,25 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : UI_SEL_Pin */
-  GPIO_InitStruct.Pin = UI_SEL_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  /*Configure GPIO pin : UI_CURSOR_Pin */
+  GPIO_InitStruct.Pin = UI_CURSOR_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(UI_SEL_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(UI_CURSOR_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : UI_COUNTDOWN_Pin UI_COUNTUP_Pin */
   GPIO_InitStruct.Pin = UI_COUNTDOWN_Pin|UI_COUNTUP_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI4_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI4_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
@@ -337,26 +359,8 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-/*
-void GPIO_DigitalRead(Switch_TypeDef* switch) {
 
-	static uint8_t raw = HAL_GPIO_ReadPin(switch->port, switch->pin);
-	if (raw == 0) switch->integrator > 0 ? switch->integrator--;
-	else if (switch->integrator < INTEGRATOR_MAXIMUM) switch->integrator++;
 
-	if (switch->integrator == 0)
-		return GPIO_PIN_RESET;
-	else if (switch->integrator >= INTEGRATOR_MAXIMUM) {
-		switch->integrator = INTEGRATOR_MAXIMUM;
-		return GPIO_PIN_SET;
-	}
-}
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-	if (GPIO_Pin == BUTTON1_Pin) {
-		GPIO_DigitalRead(&button1);
-	}
-}
-*\
 
 /* USER CODE END 4 */
 
