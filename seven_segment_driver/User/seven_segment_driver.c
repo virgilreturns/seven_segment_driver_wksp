@@ -66,7 +66,7 @@ void SEVSEG_StoreDataBuf(SEVSEG_DISPLAY_TypeDef* seveg, enum ENUM_SEVSEG_CHAR da
 
 HAL_StatusTypeDef SEVSEG_DigitTx(SEVSEG_DISPLAY_TypeDef* sevseg, enum ENUM_SEVSEG_DIGIT digit) {
 
-    HAL_StatusTypeDef success = HAL_SPI_Transmit(sevseg->spi_handler, sevseg->digit_select->char_data, 1, 1000); //send data through MOSI pin
+    HAL_StatusTypeDef success = HAL_SPI_Transmit(sevseg->spi_handler, &(sevseg->digit_select->char_data), 1, 1000); //send data through MOSI pin
 	if (success != HAL_OK) return success; //if error, return error code
     
     HAL_GPIO_WritePin(SPI_CS1_Port, SPI_CS1_Pin, GPIO_PIN_SET); //pulse latch on wanted chip
@@ -119,3 +119,35 @@ const enum ENUM_SEVSEG_CHAR SEVSEG_CHAR_ARRAY[] = {
     ENUM_SEVSEG_CHAR_Dash,
     ENUM_SEVSEG_CHAR_Blank
     };
+
+const enum ENUM_SEVSEG_CHAR ASCII_TO_SEVSEG_CHAR[] =
+{
+    ['0'] = ENUM_SEVSEG_CHAR_0,
+    ['1'] = ENUM_SEVSEG_CHAR_1,
+    ['2'] = ENUM_SEVSEG_CHAR_2,
+    ['3'] = ENUM_SEVSEG_CHAR_3,
+    ['4'] = ENUM_SEVSEG_CHAR_4,
+    ['5'] = ENUM_SEVSEG_CHAR_5,
+    ['6'] = ENUM_SEVSEG_CHAR_6,
+    ['7'] = ENUM_SEVSEG_CHAR_7,
+    ['8'] = ENUM_SEVSEG_CHAR_8,
+    ['9'] = ENUM_SEVSEG_CHAR_9,
+    ['A'] = ENUM_SEVSEG_CHAR_A,
+    ['B'] = ENUM_SEVSEG_CHAR_B,
+    ['C'] = ENUM_SEVSEG_CHAR_C,
+    ['D'] = ENUM_SEVSEG_CHAR_D,
+    ['E'] = ENUM_SEVSEG_CHAR_E,
+    ['F'] = ENUM_SEVSEG_CHAR_F,
+    ['h'] = ENUM_SEVSEG_CHAR_h,
+    ['H'] = ENUM_SEVSEG_CHAR_H,
+    ['L'] = ENUM_SEVSEG_CHAR_L,
+    ['n'] = ENUM_SEVSEG_CHAR_n,
+    ['o'] = ENUM_SEVSEG_CHAR_o,
+    ['P'] = ENUM_SEVSEG_CHAR_P,
+    ['r'] = ENUM_SEVSEG_CHAR_r,
+    ['t'] = ENUM_SEVSEG_CHAR_t,
+    ['U'] = ENUM_SEVSEG_CHAR_U,
+    ['Y'] = ENUM_SEVSEG_CHAR_Y,
+    ['-'] = ENUM_SEVSEG_CHAR_Dash,
+    [' '] = ENUM_SEVSEG_CHAR_Blank,
+};

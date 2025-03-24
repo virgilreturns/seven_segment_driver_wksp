@@ -1,4 +1,4 @@
-#include "main.h"
+/* #include "main.h"
 
 #define CHECK_PERIOD 5
 #define DEBOUNCE_TIME 0.200 // seconds
@@ -16,4 +16,4 @@ typedef struct {
 GPIO_PinState GPIO_DigitalRead(Switch_TypeDef* button);
 
 
-
+*/

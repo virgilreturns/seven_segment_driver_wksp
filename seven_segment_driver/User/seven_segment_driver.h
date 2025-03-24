@@ -48,6 +48,8 @@ enum ENUM_SEVSEG_DIGIT { //digit index
 };
 
 extern const enum ENUM_SEVSEG_CHAR ENUM_SEVSEG_CHAR_Index[];
+extern const enum ENUM_SEVSEG_CHAR ASCII_TO_SEVSEG_CHAR[];
+
 
 typedef struct {
 	const GPIO_TypeDef* DS_port;

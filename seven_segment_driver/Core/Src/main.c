@@ -63,6 +63,7 @@ static void MX_SPI2_Init(void);
 
 volatile enum ENUM_SEVSEG_CHAR data[SEVSEG_QTY_DIGITS] =
 { ENUM_SEVSEG_CHAR_H, ENUM_SEVSEG_CHAR_E, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_o };
+
 volatile enum ENUM_SEVSEG_DIGIT cursor_selection = ENUM_SEVSEG_DIGIT_0;
 
 void HAL_GPIO_EXTI_Callback(uint16_t pin){
@@ -77,36 +78,35 @@ void HAL_GPIO_EXTI_Callback(uint16_t pin){
 }
 
 
-SEVSEG_DIGIT_TypeDef DIGIT_0 = {
+const SEVSEG_DIGIT_TypeDef DIGIT_0 = {
 		  .DS_pin = GPIO_PIN_9,
 		  .DS_port = GPIOC
 };
 
-SEVSEG_DIGIT_TypeDef DIGIT_1 = {
+const SEVSEG_DIGIT_TypeDef DIGIT_1 = {
 		  .DS_pin = GPIO_PIN_8,
 		  .DS_port = GPIOC
 };
 
-SEVSEG_DIGIT_TypeDef DIGIT_2 = {
+const SEVSEG_DIGIT_TypeDef DIGIT_2 = {
 		  .DS_pin = GPIO_PIN_8,
 		  .DS_port = GPIOB,
 };
 
-SEVSEG_DIGIT_TypeDef DIGIT_3 = {
+const SEVSEG_DIGIT_TypeDef DIGIT_3 = {
 		  .DS_pin = GPIO_PIN_6,
 		  .DS_port = GPIOC,
 };
 
-SEVSEG_DIGIT_TypeDef DIGIT_4 = {
+const SEVSEG_DIGIT_TypeDef DIGIT_4 = {
 		  .DS_pin = GPIO_PIN_9,
 		  .DS_port = GPIOB,
 };
 
-SEVSEG_DISPLAY_TypeDef sevseg = {
-		  .spi_handler = &hspi2
-		  //.digit_select = { DIGIT_0, DIGIT_1, DIGIT_2, DIGIT_3, DIGIT_4 },
+const SEVSEG_DISPLAY_TypeDef sevseg = {
+		  .spi_handler = &hspi2,
+		  .digit_select = { DIGIT_0, DIGIT_1, DIGIT_2, DIGIT_3, DIGIT_4 },
 };
-sevseg.digit_select[0] = DIGIT_0;
 
 //SEVSEG_StoreDataBuf(&sevseg, data);
 //SEVSEG_Write(&sevseg); // to be put into while loop
@@ -147,37 +147,7 @@ int main(void)
   MX_USART2_UART_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
-  volatile enum ENUM_SEVSEG_CHAR data[SEVSEG_QTY_DIGITS] = { ENUM_SEVSEG_CHAR_H, ENUM_SEVSEG_CHAR_E, ENUM_SEVSEG_CHAR_1, ENUM_SEVSEG_CHAR_1, ENUM_SEVSEG_CHAR_o };
-
-  SEVSEG_DIGIT_TypeDef DIGIT_0 = {
-		  .DS_pin = GPIO_PIN_9,
-		  .DS_port = GPIOC
-  };
-  
-  SEVSEG_DIGIT_TypeDef DIGIT_1 = {
-		  .DS_pin = GPIO_PIN_8,
-		  .DS_port = GPIOC
-  };
-
-  SEVSEG_DIGIT_TypeDef DIGIT_2 = {
-		  .DS_pin = GPIO_PIN_8,
-		  .DS_port = GPIOB,
-  };
-
-  SEVSEG_DIGIT_TypeDef DIGIT_3 = {
-		  .DS_pin = GPIO_PIN_6,
-		  .DS_port = GPIOC,
-  };
-
-  SEVSEG_DIGIT_TypeDef DIGIT_4 = {
-		  .DS_pin = GPIO_PIN_9,
-		  .DS_port = GPIOB,
-  };
-
-  SEVSEG_DISPLAY_TypeDef sevseg = {
-		  .spi_handler = &hspi2,
-		  .digit_select = { DIGIT_0, DIGIT_1, DIGIT_2, DIGIT_3, DIGIT_4 },
-  };
+ 
 
   SEVSEG_StoreDataBuf(&sevseg, data);
 
