@@ -35,6 +35,7 @@ extern "C" {
 #include <stdint.h>
 #include "seven_segment_driver.h"
 #include <stdbool.h>
+#include "stm32f401xe.h"
 
 
 
@@ -72,20 +73,29 @@ void Error_Handler(void);
 #define USART_RX_GPIO_Port GPIOA
 #define LD2_Pin GPIO_PIN_5
 #define LD2_GPIO_Port GPIOA
-#define REGISTER_LATCH_Pin GPIO_PIN_1
-#define REGISTER_LATCH_GPIO_Port GPIOB
+#define SPI_LATCH_Pin GPIO_PIN_1
+#define SPI_LATCH_GPIO_Port GPIOB
 #define DIGIT_3_SEL_Pin GPIO_PIN_6
 #define DIGIT_3_SEL_GPIO_Port GPIOC
 #define DIGIT_1_SEL_Pin GPIO_PIN_8
 #define DIGIT_1_SEL_GPIO_Port GPIOC
 #define DIGIT_0_SEL_Pin GPIO_PIN_9
 #define DIGIT_0_SEL_GPIO_Port GPIOC
+#define UI_CURSOR_Pin GPIO_PIN_10
+#define UI_CURSOR_GPIO_Port GPIOA
+#define UI_CURSOR_EXTI_IRQn EXTI15_10_IRQn
 #define TMS_Pin GPIO_PIN_13
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14
 #define TCK_GPIO_Port GPIOA
 #define SWO_Pin GPIO_PIN_3
 #define SWO_GPIO_Port GPIOB
+#define UI_COUNTDOWN_Pin GPIO_PIN_4
+#define UI_COUNTDOWN_GPIO_Port GPIOB
+#define UI_COUNTDOWN_EXTI_IRQn EXTI4_IRQn
+#define UI_COUNTUP_Pin GPIO_PIN_5
+#define UI_COUNTUP_GPIO_Port GPIOB
+#define UI_COUNTUP_EXTI_IRQn EXTI9_5_IRQn
 #define DIGIT_2_SEL_Pin GPIO_PIN_8
 #define DIGIT_2_SEL_GPIO_Port GPIOB
 #define DIGIT_4_SEL_Pin GPIO_PIN_9
@@ -93,7 +103,7 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN Private defines */
 
-
+#define SEVSEG_QTY_DIGITS 5
 
 /* USER CODE END Private defines */
 
