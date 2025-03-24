@@ -1,0 +1,68 @@
+#ifndef __SEVEN_SEGMENT_DRIVER_H
+#define __SEVEN_SEGMENT_DRIVER_H
+
+#include "main.h"
+
+#define SEVSEG_QTY_DIGITS 5
+
+enum ENUM_SEVSEG_CHAR {
+	ENUM_SEVSEG_CHAR_0 = 0x80,
+	ENUM_SEVSEG_CHAR_1 = 0xF9,
+	ENUM_SEVSEG_CHAR_2 = 0xA4,
+	ENUM_SEVSEG_CHAR_3 = 0xB0,
+	ENUM_SEVSEG_CHAR_4 = 0x99,
+	ENUM_SEVSEG_CHAR_5 = 0x92,
+	ENUM_SEVSEG_CHAR_6 = 0x82,
+	ENUM_SEVSEG_CHAR_7 = 0xF8,
+	ENUM_SEVSEG_CHAR_8 = 0x80,
+	ENUM_SEVSEG_CHAR_9 = 0x98,
+	ENUM_SEVSEG_CHAR_A = 0x88,
+	ENUM_SEVSEG_CHAR_B = 0x80,
+	ENUM_SEVSEG_CHAR_C = 0xC6,
+	ENUM_SEVSEG_CHAR_D = 0xA1,
+	ENUM_SEVSEG_CHAR_E = 0x86,
+	ENUM_SEVSEG_CHAR_F = 0x8E,
+	ENUM_SEVSEG_CHAR_h = 0x89,
+	ENUM_SEVSEG_CHAR_H = 0x8B,
+	ENUM_SEVSEG_CHAR_L = 0xC7,
+	ENUM_SEVSEG_CHAR_n = 0xBB,
+	ENUM_SEVSEG_CHAR_o = 0xA0,
+	ENUM_SEVSEG_CHAR_P = 0x8C,
+	ENUM_SEVSEG_CHAR_r = 0xAF,
+	ENUM_SEVSEG_CHAR_t = 0x87,
+	ENUM_SEVSEG_CHAR_U = 0xC1,
+	ENUM_SEVSEG_CHAR_Y = 0x91,
+	ENUM_SEVSEG_CHAR_Dash = 0xBF,
+	ENUM_SEVSEG_CHAR_Blank = 0xFF
+};
+
+enum ENUM_SEVSEG_DIGIT { //digit index
+	ENUM_SEVSEG_DIGIT_0 = 0,
+	ENUM_SEVSEG_DIGIT_1 = 1,
+	ENUM_SEVSEG_DIGIT_2 = 2,
+	ENUM_SEVSEG_DIGIT_3 = 3,
+	ENUM_SEVSEG_DIGIT_4 = 4,
+	ENUM_SEVSEG_DIGIT_5 = 5,
+	ENUM_SEVSEG_DIGIT_6 = 6,
+	ENUM_SEVSEG_DIGIT_7 = 7
+};
+
+extern const enum ENUM_SEVSEG_CHAR ENUM_SEVSEG_CHAR_Index[];
+
+typedef struct {
+	const GPIO_TypeDef* DS_port;
+	const uint16_t DS_pin;
+	enum ENUM_SEVSEG_CHAR char_data; //when programming UI, make sure to use the array to incrementally select
+} SEVSEG_DIGIT_TypeDef;
+
+typedef struct {
+	const SPI_HandleTypeDef* spi_handler;
+	SEVSEG_DIGIT_TypeDef digit_select[SEVSEG_QTY_DIGITS];
+} SEVSEG_DISPLAY_TypeDef;
+
+
+void SEVSEG_StoreDataBuf(SEVSEG_DISPLAY_TypeDef* seveg, enum ENUM_SEVSEG_CHAR data[]);
+HAL_StatusTypeDef SEVSEG_DigitTx(SEVSEG_DISPLAY_TypeDef* sevseg, enum ENUM_SEVSEG_DIGIT digit);
+HAL_StatusTypeDef SEVSEG_Write(SEVSEG_DISPLAY_TypeDef* sevseg);
+
+#endif
