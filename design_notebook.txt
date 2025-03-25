@@ -1,3 +1,14 @@
+ TESTING REQ:
+    -INTEGRATED TESTS: 
+				     : (COMPLETED 3/20/2025) SHIFT REGISTER + 7 LEDS + BUTTON INTERFACE
+					 : (COMPLETED 3/21/2025) SHIFT REGISTER + 7 SEGMENT DISPLAY, (basic test) make sure digital 0 actually is ground
+					 : (COMPLETED 3/21/2025) SHIFT REGISTER + 5 DIGIT 7 SEGMENT DISPLAY 
+					 : (COMPLETED 3/24/2025) SPI COMMUNICATION + LOGIC ANALYZER 
+					 : (INCOMPLETE) SPI COMMUNICATION WITH SHIFT REGISTER + 7 SEGMENT DISPLAY (1 digit, 1 character)
+					 : (INCOMPLETE) CODE ARCHITECTURE FOR MULTIPLEXING DIGITS, ACCURATE DELAYS BETWEEN TRANSMISSION
+					 : (INCOMPLETE) SPI COMMUNICATION WITH SHIFT REGISTER + 5 DIGIT 7 SEGMENT DISPLAY (use full data buf)
+					 : (INCOMPLETE) CODE ARCHITECTURE FOR BUTTON USER INTERFACE, DEBOUNCE? EXTI CALLBACKS? 
+
 3/17/2025
   The 74HC595 shift register will be driving up to 7 LEDs. It has a max total output of 70 mA and 35 mA for a single pin.
   With 7 LEDs, the maximum individual output pin current is 6.25 mA which can be achieved with 560 ohm resistor in series with
@@ -76,9 +87,12 @@
 	-refactored code to support multiple digit display
 	-default data will be "Hello"
  
- TESTING REQ:
-    -INTEGRATED TESTS: (COMPLETED) SHIFT REGISTER + 7 SEGMENT DISPLAY, (basic test) make sure digital 0 actually is ground check lumens 
-					 : (COMPLETED) SHIFT REGISTER + 5 DIGIT 7 SEGMENT DISPLAY 
-					 : (INCOMPLETE) SPI COMMUNICATION + LOGIC ANALYZER
-					 : (INCOMPLETE) SPI COMMUNICATION WITH SHIFT REGISTER + 7 SEGMENT DISPLAY (1 digit, 1 character)
-					 : (INCOMPLETE) SPI COMMUNICATION WITH SHIFT REGISTER + 5 DIGIT 7 SEGMENT DISPLAY (use full data buf)
+ 3/24/2025
+
+	Completed testing SPI communication with logic analyzer. Tested data buffers: (0xFF, 0x33, 0x88, {ASCII_TO_ENUM("HELLo") })
+	
+	KEY TAKEWAYS: increase prescaler to decrease the SPI frequency to ~1 Mhz. APB1 peripheral I believe for SPI2. Sysclk / 16 ~ 1Mhz.
+	Sample frequency should be at least 4 times greater than the transmission frequency.
+
+	There is a bug where the logic analyzer can accurate detect the first buffer, but will fall out of alignment. Doesn't start reading
+	immediately when the CLK goes high...
