@@ -48,6 +48,7 @@ TIM_HandleTypeDef htim2;
 /* USER CODE BEGIN PV */
 
 SEVSEG_DISPLAY_TypeDef sevseg;
+DEBOUNCE_Typedef button_debounce;
 
 /* USER CODE END PV */
 
@@ -68,7 +69,6 @@ volatile enum ENUM_SEVSEG_CHAR data[SEVSEG_QTY_DIGITS] =
 { ENUM_SEVSEG_CHAR_H, ENUM_SEVSEG_CHAR_E, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_o };
 
 
-
 void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi){ // SPI Transmission completed interrupt
 	  if (hspi->Instance == SPI2){
 		  HAL_TIM_Base_Start_IT(&htim1); // start latch pulse width timer ~500 ns 10 counts, 16 Mhz = 625 ns
@@ -81,30 +81,38 @@ volatile enum ENUM_SEVSEG_DIGIT cursor_selection = ENUM_SEVSEG_DIGIT_0;
 
 
 void HAL_GPIO_EXTI_Callback(uint16_t pin){
+    if (button_debounce == DEBOUNCE_FALSE){
+    	return;
+    }
+
 	switch (pin) {
 		case UI_COUNTUP_Pin:
 			if(sevseg.digit_select[cursor_selection].current_char_index == INDEX_FROM_ENUM[ENUM_SEVSEG_CHAR_Blank]){
 				sevseg.digit_select[cursor_selection].current_char_index = INDEX_FROM_ENUM[ENUM_SEVSEG_CHAR_0]; //return to beginning of array if at end
-				return;
 			}
+			else
 			sevseg.digit_select[cursor_selection].current_char_index++;
 			break;
 		case UI_COUNTDOWN_Pin:
 			if(sevseg.digit_select[cursor_selection].current_char_index == INDEX_FROM_ENUM[ENUM_SEVSEG_CHAR_0]){
 				sevseg.digit_select[cursor_selection].current_char_index = INDEX_FROM_ENUM[ENUM_SEVSEG_CHAR_Blank]; //return to beginning of array if at end
-				return;
 			}
+			else
 			sevseg.digit_select[cursor_selection].current_char_index--;
 			break;
 		case UI_CURSOR_Pin:
 			if(cursor_selection == SEVSEG_QTY_DIGITS-1){
 				cursor_selection = ENUM_SEVSEG_DIGIT_0;
-				return;
 			}
+			else
 			cursor_selection++;
 
 			break;
 	}
+
+	//button_debounce = debounce_false
+	//start debounce delay timer
+	//config timer to set debounce = true again
 	return;
 }
 
@@ -154,7 +162,11 @@ int main(void)
   while (1)
   {
 
-	  HAL_SPI_Transmit(&hspi2, myDataa ,5,1000);
+	 //HAL_SPI_Transmit(&hspi2, myDataa ,5,1000)
+
+     //******INTEGRATED TEST*******
+
+	 HAL_SPI_Transmit_IT(&hspi2, myDataa, 1);
 
     /* USER CODE END WHILE */
 

@@ -1,6 +1,7 @@
 #include "button_driver.h"
 
 
+
 /* GPIO_PinState GPIO_DigitalRead(Switch_TypeDef* button) {
 
 	static uint8_t raw = HAL_GPIO_ReadPin(button->port, button->pin);

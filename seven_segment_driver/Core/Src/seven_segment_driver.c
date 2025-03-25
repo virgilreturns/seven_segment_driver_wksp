@@ -146,6 +146,7 @@ HAL_StatusTypeDef SEVSEG_Write(SEVSEG_DISPLAY_TypeDef* sevseg) {
 // Array of all ENUM_SEVSEG_CHAR values
 
 
+
 const enum ENUM_SEVSEG_CHAR ASCII_to_SEVSEG_CHAR[255] = {
     ['0'] = ENUM_SEVSEG_CHAR_0,
     ['1'] = ENUM_SEVSEG_CHAR_1,
