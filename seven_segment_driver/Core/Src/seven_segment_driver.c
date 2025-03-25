@@ -65,13 +65,13 @@ void SEVSEG_StoreDataBuf(SEVSEG_DISPLAY_TypeDef* seveg, enum ENUM_SEVSEG_CHAR da
 	}
 };
 
-HAL_StatusTypeDef SEVSEG_DigitTx(SEVSEG_DISPLAY_TypeDef* sevseg, enum ENUM_SEVSEG_DIGIT digit, const uint8_t data) {
+HAL_StatusTypeDef SEVSEG_DigitTx(SEVSEG_DISPLAY_TypeDef* sevseg, enum ENUM_SEVSEG_DIGIT digit) {
 
-    HAL_StatusTypeDef success = HAL_SPI_Transmit(sevseg->spi_handler, (uint8_t)data, 1, 1000); //send data through MOSI pin
+    HAL_StatusTypeDef success = HAL_SPI_Transmit(sevseg->spi_handler, &(sevseg->digit_select[digit].char_data), 1, 1000); //send data through MOSI pin
 	if (success != HAL_OK) return success; //if error, return error code
     
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET); //pulse latch on wanted chip
-	HAL_GPIO_WritePin(REGISTER_LATCH_Port, REGISTER_LATCH_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(SPI_LATCH_GPIO_Port, SPI_LATCH_Pin, GPIO_PIN_RESET);
 
 	HAL_GPIO_WritePin(sevseg->digit_select[digit].DS_port, sevseg->digit_select[digit].DS_pin, GPIO_PIN_SET);
 	HAL_Delay(5); // 5ms delay to see the digit
@@ -84,7 +84,7 @@ HAL_StatusTypeDef SEVSEG_Write(SEVSEG_DISPLAY_TypeDef* sevseg) {
 	HAL_StatusTypeDef success;
 	for (int i=0; i < SEVSEG_QTY_DIGITS; i++) {
 		success = SEVSEG_DigitTx(sevseg, i);
-		if success != HAL_OK) return success;
+		if (success != HAL_OK) return success;
 	}
 	return success;
 };
