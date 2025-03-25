@@ -67,6 +67,12 @@ void Error_Handler(void);
 #define B1_Pin GPIO_PIN_13
 #define B1_GPIO_Port GPIOC
 #define B1_EXTI_IRQn EXTI15_10_IRQn
+#define UI_COUNTDOWN_Pin GPIO_PIN_0
+#define UI_COUNTDOWN_GPIO_Port GPIOC
+#define UI_COUNTUP_Pin GPIO_PIN_1
+#define UI_COUNTUP_GPIO_Port GPIOC
+#define UI_CURSOR_Pin GPIO_PIN_2
+#define UI_CURSOR_GPIO_Port GPIOC
 #define LD2_Pin GPIO_PIN_5
 #define LD2_GPIO_Port GPIOA
 #define DIGIT_3_SEL_Pin GPIO_PIN_6

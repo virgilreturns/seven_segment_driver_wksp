@@ -47,12 +47,13 @@ enum ENUM_SEVSEG_DIGIT { //digit index
 	ENUM_SEVSEG_DIGIT_7 = 7
 };
 
-extern const enum ENUM_SEVSEG_CHAR ENUM_SEVSEG_CHAR_Index[];
-
+typedef struct{
+	enum SEVSEG_CHAR
+} SEVSEG_CHAR_Typedef;
 typedef struct {
 	const GPIO_TypeDef* DS_port;
 	const uint16_t DS_pin;
-	enum ENUM_SEVSEG_CHAR char_data; //when programming UI, make sure to use the array to incrementally select
+	uint8_t current_char_index;
 } SEVSEG_DIGIT_TypeDef;
 
 typedef struct {

@@ -96,3 +96,9 @@
 
 	There is a bug where the logic analyzer can accurate detect the first buffer, but will fall out of alignment. Doesn't start reading
 	immediately when the CLK goes high...
+
+	Examining HC595 datasheet, provides timing requirements for pulse width, max CLK speeds...
+
+	TODO: CREATE PULSE FUNCTION, ADJUST CLOCK FREQ, TRANSMISSION SEQUENCE
+	      TIMING REQUIREMENTS: max CLK speed at 2.0 V = 5 Mhz, 4.5 V = 25 Mhz. Pulse Duration SRCLR 100 ns at 2V,
+	      SWITCHING CHARACTERISTICS (input to output): ~250 ns

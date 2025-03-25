@@ -42,6 +42,9 @@
 /* Private variables ---------------------------------------------------------*/
 SPI_HandleTypeDef hspi2;
 
+TIM_HandleTypeDef htim1;
+TIM_HandleTypeDef htim2;
+
 /* USER CODE BEGIN PV */
 
 
@@ -51,6 +54,8 @@ SPI_HandleTypeDef hspi2;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_SPI2_Init(void);
+static void MX_TIM1_Init(void);
+static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -61,43 +66,34 @@ static void MX_SPI2_Init(void);
 volatile enum ENUM_SEVSEG_CHAR data[SEVSEG_QTY_DIGITS] =
 { ENUM_SEVSEG_CHAR_H, ENUM_SEVSEG_CHAR_E, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_o };
 
-volatile enum ENUM_SEVSEG_DIGIT cursor_selection = ENUM_SEVSEG_DIGIT_0;
-
-/*void HAL_GPIO_EXTI_Callback(uint16_t pin){
-	switch (pin) {
-		case UI_COUNTUP_Pin:
-			break;
-		case UI_COUNTDOWN_Pin:
-			break;
-		case UI_CURSOR_Pin:
-			break;
-	}
-}
-*/
-
 const SEVSEG_DIGIT_TypeDef DIGIT_0 = {
 		  .DS_pin = DIGIT_0_SEL_Pin,
-		  .DS_port = DIGIT_0_SEL_GPIO_Port
+		  .DS_port = DIGIT_0_SEL_GPIO_Port,
+		  .current_char_index = 0
 };
 
 const SEVSEG_DIGIT_TypeDef DIGIT_1 = {
 		  .DS_pin = DIGIT_1_SEL_Pin,
 		  .DS_port = DIGIT_1_SEL_GPIO_Port
+		  .current_char_index = 0
 };
 
 const SEVSEG_DIGIT_TypeDef DIGIT_2 = {
 		  .DS_pin = DIGIT_2_SEL_Pin,
 		  .DS_port = DIGIT_2_SEL_GPIO_Port,
+		  .current_char_index = 0
 };
 
 const SEVSEG_DIGIT_TypeDef DIGIT_3 = {
 		  .DS_pin = DIGIT_3_SEL_Pin,
 		  .DS_port = DIGIT_3_SEL_GPIO_Port,
+		  .current_char_index = 0
 };
 
 const SEVSEG_DIGIT_TypeDef DIGIT_4 = {
 		  .DS_pin = DIGIT_4_SEL_Pin,
 		  .DS_port = DIGIT_4_SEL_GPIO_Port,
+		  .current_char_index = 0
 };
 
 const SEVSEG_DISPLAY_TypeDef sevseg = {
@@ -105,10 +101,44 @@ const SEVSEG_DISPLAY_TypeDef sevseg = {
 		  .digit_select = { DIGIT_0, DIGIT_1, DIGIT_2, DIGIT_3, DIGIT_4 },
 };
 
+void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi){ // SPI Transmission completed interrupt
+	  if (hspi->Instance == SPI2){
+		  HAL_TIM_Base_Start_IT(&htim1); // start latch pulse width timer ~500 ns 10 counts, 16 Mhz = 625 ns
+		  HAL_GPIO_WritePin(SPI_LATCH_GPIO_Port, SPI_LATCH_Pin, GPIO_PIN_SET); // set latch
+		  HAL_TIM_Base_Start_IT(&htim2); // start delay for refresh rate ~2ms per digit :) timer 2 is 50 kHz
+	  }
+  }
+
+volatile enum ENUM_SEVSEG_DIGIT cursor_selection = ENUM_SEVSEG_DIGIT_0;
 
 
-//  // to be put into while loop
+void HAL_GPIO_EXTI_Callback(uint16_t pin){
+	switch (pin) {
+		case UI_COUNTUP_Pin:
+			if(sevseg.digit_select[cursor_selection].current_char_index == INDEX_FROM_ENUM[ENUM_SEVSEG_CHAR_Blank]){
+				sevseg.digit_select[cursor_selection].current_char_index = INDEX_FROM_ENUM[ENUM_SEVSEG_CHAR_0]; //return to beginning of array if at end
+				return;
+			}
+			sevseg.digit_select[cursor_selection].current_char_index++;
+			break;
+		case UI_COUNTDOWN_Pin:
+			if(sevseg.digit_select[cursor_selection].current_char_index == INDEX_FROM_ENUM[ENUM_SEVSEG_CHAR_0]){
+				sevseg.digit_select[cursor_selection].current_char_index = INDEX_FROM_ENUM[ENUM_SEVSEG_CHAR_Blank]; //return to beginning of array if at end
+				return;
+			}
+			sevseg.digit_select[cursor_selection].current_char_index--;
+			break;
+		case UI_CURSOR_Pin:
+			if(cursor_selection == SEVSEG_QTY_DIGITS-1){
+				cursor_selection = ENUM_SEVSEG_DIGIT_0;
+				return;
+			}
+			cursor_selection++;
 
+			break;
+	}
+	return;
+}
 
 
 /* USER CODE END 0 */
@@ -143,9 +173,10 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_SPI2_Init();
+  MX_TIM1_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
  
-
   uint8_t myDataa[5] = {ENUM_SEVSEG_CHAR_H, ENUM_SEVSEG_CHAR_E, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_o};
 
   /* USER CODE END 2 */
@@ -186,9 +217,9 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLM = 16;
-  RCC_OscInitStruct.PLL.PLLN = 336;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV4;
+  RCC_OscInitStruct.PLL.PLLM = 8;
+  RCC_OscInitStruct.PLL.PLLN = 64;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 7;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -200,7 +231,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV8;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV4;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV16;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
@@ -250,6 +281,105 @@ static void MX_SPI2_Init(void)
 }
 
 /**
+  * @brief TIM1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM1_Init(void)
+{
+
+  /* USER CODE BEGIN TIM1_Init 0 */
+
+  /* USER CODE END TIM1_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM1_Init 1 */
+
+  /* USER CODE END TIM1_Init 1 */
+  htim1.Instance = TIM1;
+  htim1.Init.Prescaler = 0;
+  htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim1.Init.Period = 10;
+  htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim1.Init.RepetitionCounter = 0;
+  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim1, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_OnePulse_Init(&htim1, TIM_OPMODE_SINGLE) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM1_Init 2 */
+
+  /* USER CODE END TIM1_Init 2 */
+
+}
+
+/**
+  * @brief TIM2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM2_Init(void)
+{
+
+  /* USER CODE BEGIN TIM2_Init 0 */
+
+  /* USER CODE END TIM2_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM2_Init 1 */
+
+  /* USER CODE END TIM2_Init 1 */
+  htim2.Instance = TIM2;
+  htim2.Init.Prescaler = 40;
+  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim2.Init.Period = 100;
+  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_OnePulse_Init(&htim2, TIM_OPMODE_SINGLE) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM2_Init 2 */
+
+  /* USER CODE END TIM2_Init 2 */
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -280,6 +410,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : UI_COUNTDOWN_Pin UI_COUNTUP_Pin UI_CURSOR_Pin */
+  GPIO_InitStruct.Pin = UI_COUNTDOWN_Pin|UI_COUNTUP_Pin|UI_CURSOR_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pin : LD2_Pin */
   GPIO_InitStruct.Pin = LD2_Pin;
