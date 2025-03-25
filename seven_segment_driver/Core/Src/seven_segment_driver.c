@@ -146,7 +146,7 @@ const enum ENUM_SEVSEG_CHAR ASCII_to_SEVSEG_CHAR[255] = {
     [' '] = ENUM_SEVSEG_CHAR_Blank,
 };
 
-const uint16_t INDEX_FROM_ENUM[0xFF] = {
+const uint16_t INDEX_FROM_ENUM[0x102] = {
     [ENUM_SEVSEG_CHAR_0] = 0,
     [ENUM_SEVSEG_CHAR_1] = 1,
     [ENUM_SEVSEG_CHAR_2] = 2,
