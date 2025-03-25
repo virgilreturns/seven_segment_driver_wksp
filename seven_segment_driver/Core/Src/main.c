@@ -49,7 +49,6 @@ TIM_HandleTypeDef htim2;
 
 SEVSEG_DISPLAY_TypeDef sevseg;
 DEBOUNCE_Typedef button_debounce;
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -69,13 +68,14 @@ volatile enum ENUM_SEVSEG_CHAR data[SEVSEG_QTY_DIGITS] =
 { ENUM_SEVSEG_CHAR_H, ENUM_SEVSEG_CHAR_E, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_o };
 
 
-void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi){ // SPI Transmission completed interrupt
+/*void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi){ // SPI Transmission completed interrupt
 	  if (hspi->Instance == SPI2){
 		  HAL_TIM_Base_Start_IT(&htim1); // start latch pulse width timer ~500 ns 10 counts, 16 Mhz = 625 ns
 		  HAL_GPIO_WritePin(SPI_LATCH_GPIO_Port, SPI_LATCH_Pin, GPIO_PIN_SET); // set latch
 		  HAL_TIM_Base_Start_IT(&htim2); // start delay for refresh rate ~2ms per digit :) timer 2 is 50 kHz
 	  }
   }
+*/
 
 volatile enum ENUM_SEVSEG_DIGIT cursor_selection = ENUM_SEVSEG_DIGIT_0;
 
@@ -153,7 +153,7 @@ int main(void)
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
  
-  uint8_t myDataa[5] = {ENUM_SEVSEG_CHAR_H, ENUM_SEVSEG_CHAR_E, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_o};
+  uint8_t myDataa[5] = {ENUM_SEVSEG_CHAR_n, ENUM_SEVSEG_CHAR_E, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_o};
 
   /* USER CODE END 2 */
 
@@ -165,8 +165,11 @@ int main(void)
 	 //HAL_SPI_Transmit(&hspi2, myDataa ,5,1000)
 
      //******INTEGRATED TEST*******
+	 //HAL_GPIO_WritePin(SPI_RESET_GPIO_Port, SPI_RESET_Pin, GPIO_PIN_RESET);
+	 //HAL_GPIO_WritePin(SPI_RESET_GPIO_Port, SPI_RESET_Pin, GPIO_PIN_SET);
+	 HAL_SPI_Transmit(&hspi2, myDataa, 1, 1000);
+	 HAL_Delay(2);
 
-	 HAL_SPI_Transmit_IT(&hspi2, myDataa, 1);
 
     /* USER CODE END WHILE */
 
@@ -380,10 +383,10 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, DIGIT_3_SEL_Pin|DIGIT_1_SEL_Pin|DIGIT_0_SEL_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, SPI_RESET_Pin|SPI_LATCH_Pin|DIGIT_2_SEL_Pin|DIGIT_4_SEL_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, SPI_LATCH_Pin|DIGIT_2_SEL_Pin|DIGIT_4_SEL_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, DIGIT_3_SEL_Pin|DIGIT_1_SEL_Pin|DIGIT_0_SEL_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : B1_Pin */
   GPIO_InitStruct.Pin = B1_Pin;
@@ -403,6 +406,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : SPI_RESET_Pin */
+  GPIO_InitStruct.Pin = SPI_RESET_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(SPI_RESET_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : DIGIT_3_SEL_Pin DIGIT_1_SEL_Pin DIGIT_0_SEL_Pin */
   GPIO_InitStruct.Pin = DIGIT_3_SEL_Pin|DIGIT_1_SEL_Pin|DIGIT_0_SEL_Pin;

@@ -75,6 +75,8 @@ void Error_Handler(void);
 #define UI_CURSOR_GPIO_Port GPIOC
 #define LD2_Pin GPIO_PIN_5
 #define LD2_GPIO_Port GPIOA
+#define SPI_RESET_Pin GPIO_PIN_14
+#define SPI_RESET_GPIO_Port GPIOB
 #define DIGIT_3_SEL_Pin GPIO_PIN_6
 #define DIGIT_3_SEL_GPIO_Port GPIOC
 #define DIGIT_1_SEL_Pin GPIO_PIN_8
