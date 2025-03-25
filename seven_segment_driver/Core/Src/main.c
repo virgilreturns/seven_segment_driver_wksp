@@ -47,6 +47,7 @@ TIM_HandleTypeDef htim2;
 
 /* USER CODE BEGIN PV */
 
+SEVSEG_DISPLAY_TypeDef sevseg;
 
 /* USER CODE END PV */
 
@@ -57,7 +58,7 @@ static void MX_SPI2_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
-
+static void SEVSEG_Init();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -66,40 +67,7 @@ static void MX_TIM2_Init(void);
 volatile enum ENUM_SEVSEG_CHAR data[SEVSEG_QTY_DIGITS] =
 { ENUM_SEVSEG_CHAR_H, ENUM_SEVSEG_CHAR_E, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_o };
 
-const SEVSEG_DIGIT_TypeDef DIGIT_0 = {
-		  .DS_pin = DIGIT_0_SEL_Pin,
-		  .DS_port = DIGIT_0_SEL_GPIO_Port,
-		  .current_char_index = 0
-};
 
-const SEVSEG_DIGIT_TypeDef DIGIT_1 = {
-		  .DS_pin = DIGIT_1_SEL_Pin,
-		  .DS_port = DIGIT_1_SEL_GPIO_Port
-		  .current_char_index = 0
-};
-
-const SEVSEG_DIGIT_TypeDef DIGIT_2 = {
-		  .DS_pin = DIGIT_2_SEL_Pin,
-		  .DS_port = DIGIT_2_SEL_GPIO_Port,
-		  .current_char_index = 0
-};
-
-const SEVSEG_DIGIT_TypeDef DIGIT_3 = {
-		  .DS_pin = DIGIT_3_SEL_Pin,
-		  .DS_port = DIGIT_3_SEL_GPIO_Port,
-		  .current_char_index = 0
-};
-
-const SEVSEG_DIGIT_TypeDef DIGIT_4 = {
-		  .DS_pin = DIGIT_4_SEL_Pin,
-		  .DS_port = DIGIT_4_SEL_GPIO_Port,
-		  .current_char_index = 0
-};
-
-const SEVSEG_DISPLAY_TypeDef sevseg = {
-		  .spi_handler = &hspi2,
-		  .digit_select = { DIGIT_0, DIGIT_1, DIGIT_2, DIGIT_3, DIGIT_4 },
-};
 
 void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi){ // SPI Transmission completed interrupt
 	  if (hspi->Instance == SPI2){
@@ -160,7 +128,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+  SEVSEG_Init();
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -455,26 +423,43 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-/*
-void GPIO_DigitalRead(Switch_TypeDef* switch) {
+static void SEVSEG_Init(){
+	SEVSEG_DIGIT_TypeDef DIGIT_0 = {
+			  .DS_pin = DIGIT_0_SEL_Pin,
+			  .DS_port = DIGIT_0_SEL_GPIO_Port,
+			  .current_char_index = 0
+	};
 
-	static uint8_t raw = HAL_GPIO_ReadPin(switch->port, switch->pin);
-	if (raw == 0) switch->integrator > 0 ? switch->integrator--;
-	else if (switch->integrator < INTEGRATOR_MAXIMUM) switch->integrator++;
+	SEVSEG_DIGIT_TypeDef DIGIT_1 = {
+			  .DS_pin = DIGIT_1_SEL_Pin,
+			  .DS_port = DIGIT_1_SEL_GPIO_Port,
+			  .current_char_index = 0
+	};
 
-	if (switch->integrator == 0)
-		return GPIO_PIN_RESET;
-	else if (switch->integrator >= INTEGRATOR_MAXIMUM) {
-		switch->integrator = INTEGRATOR_MAXIMUM;
-		return GPIO_PIN_SET;
-	}
+	SEVSEG_DIGIT_TypeDef DIGIT_2 = {
+			  .DS_pin = DIGIT_2_SEL_Pin,
+			  .DS_port = DIGIT_2_SEL_GPIO_Port,
+			  .current_char_index = 0
+	};
+
+	SEVSEG_DIGIT_TypeDef DIGIT_3 = {
+			  .DS_pin = DIGIT_3_SEL_Pin,
+			  .DS_port = DIGIT_3_SEL_GPIO_Port,
+			  .current_char_index = 0
+	};
+
+	SEVSEG_DIGIT_TypeDef DIGIT_4 = {
+			  .DS_pin = DIGIT_4_SEL_Pin,
+			  .DS_port = DIGIT_4_SEL_GPIO_Port,
+			  .current_char_index = 0
+	};
+
+	SEVSEG_DISPLAY_TypeDef sevseg = {
+			  .spi_handler = &hspi2,
+			  .digit_select = { DIGIT_0, DIGIT_1, DIGIT_2, DIGIT_3, DIGIT_4 },
+	};
+
 }
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-	if (GPIO_Pin == BUTTON1_Pin) {
-		GPIO_DigitalRead(&button1);
-	}
-}
-*\
 
 /* USER CODE END 4 */
 

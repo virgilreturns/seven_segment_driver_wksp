@@ -5,6 +5,8 @@
 
 #define SEVSEG_QTY_DIGITS 5
 
+extern const uint16_t INDEX_FROM_ENUM[];
+
 enum ENUM_SEVSEG_CHAR {
 	ENUM_SEVSEG_CHAR_0 = 0x80,
 	ENUM_SEVSEG_CHAR_1 = 0xF9,
@@ -47,12 +49,10 @@ enum ENUM_SEVSEG_DIGIT { //digit index
 	ENUM_SEVSEG_DIGIT_7 = 7
 };
 
-typedef struct{
-	enum SEVSEG_CHAR
-} SEVSEG_CHAR_Typedef;
+
 typedef struct {
-	const GPIO_TypeDef* DS_port;
-	const uint16_t DS_pin;
+	GPIO_TypeDef* DS_port;
+	uint16_t DS_pin;
 	uint8_t current_char_index;
 } SEVSEG_DIGIT_TypeDef;
 
