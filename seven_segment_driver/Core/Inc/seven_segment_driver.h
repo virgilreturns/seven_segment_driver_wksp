@@ -10,7 +10,7 @@ extern const uint16_t INDEX_FROM_ENUM[];
 
 typedef enum __DEBOUNCE_STATE {
 	DEBOUNCE_FALSE = 0,
-	DEBOUNCED_TRUE = 1
+	DEBOUNCE_TRUE = 1
 } DEBOUNCE_Typedef;
 
 
@@ -60,8 +60,8 @@ enum ENUM_SEVSEG_DIGIT { //digit index
 
 
 typedef struct {
-	GPIO_TypeDef* DS_port;
 	uint16_t DS_pin;
+	GPIO_TypeDef* DS_port;
 	uint8_t current_char_index;
 } SEVSEG_DIGIT_TypeDef;
 

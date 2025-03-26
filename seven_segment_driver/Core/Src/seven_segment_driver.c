@@ -57,6 +57,9 @@
   */
 
 #include "seven_segment_driver.h"
+
+extern GPIO_PIN_TypeDef DIGIT_SEL_PINS_ARRAY[SEVSEG_QTY_DIGITS];
+
 const uint16_t INDEX_FROM_ENUM[0x102] = {
     [ENUM_SEVSEG_CHAR_0] = 0,
     [ENUM_SEVSEG_CHAR_1] = 1,
@@ -119,14 +122,15 @@ const enum ENUM_SEVSEG_CHAR SEVSEG_CHAR_ARRAY[] = {
     ENUM_SEVSEG_CHAR_Blank
     };
 
-void SEVSEG_StoreDataBuf(SEVSEG_DISPLAY_TypeDef* seveg, enum ENUM_SEVSEG_CHAR data[]) {
+void SEVSEG_StoreDataBuf(SEVSEG_DISPLAY_TypeDef* sevseg, enum ENUM_SEVSEG_CHAR data[]) {
 	for (int i = 0; i < SEVSEG_QTY_DIGITS; i++) {
-		seveg->digit_select[i].current_char_index = INDEX_FROM_ENUM[data[i]];
+		sevseg->digit_select[i].current_char_index = INDEX_FROM_ENUM[data[i]];
 	}
 };
 
 HAL_StatusTypeDef SEVSEG_DigitTx(SEVSEG_DISPLAY_TypeDef* sevseg, enum ENUM_SEVSEG_DIGIT digit) {
 
+	// write data through MOSI (SPI2 handler)
     HAL_StatusTypeDef success = HAL_SPI_Transmit_IT(sevseg->spi_handler, &(SEVSEG_CHAR_ARRAY[(sevseg->digit_select[digit].current_char_index)]), 1); //send data through MOSI pin
 	if (success != HAL_OK) return success; //if error, return error code
 

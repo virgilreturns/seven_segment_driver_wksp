@@ -43,6 +43,10 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
+typedef struct __GPIO_PIN_TYPEDEF{
+	GPIO_TypeDef* port;
+	uint16_t pin;
+} GPIO_PIN_TypeDef;
 
 /* USER CODE END ET */
 
@@ -55,6 +59,8 @@ extern "C" {
 /* USER CODE BEGIN EM */
 
 /* USER CODE END EM */
+
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
@@ -77,28 +83,32 @@ void Error_Handler(void);
 #define LD2_GPIO_Port GPIOA
 #define SPI_RESET_Pin GPIO_PIN_14
 #define SPI_RESET_GPIO_Port GPIOB
-#define DIGIT_3_SEL_Pin GPIO_PIN_6
-#define DIGIT_3_SEL_GPIO_Port GPIOC
-#define DIGIT_1_SEL_Pin GPIO_PIN_8
-#define DIGIT_1_SEL_GPIO_Port GPIOC
-#define DIGIT_0_SEL_Pin GPIO_PIN_9
-#define DIGIT_0_SEL_GPIO_Port GPIOC
+#define DIGIT_SEL_3_Pin GPIO_PIN_6
+#define DIGIT_SEL_3_GPIO_Port GPIOC
+#define DIGIT_SEL_1_Pin GPIO_PIN_8
+#define DIGIT_SEL_1_GPIO_Port GPIOC
+#define DIGIT_SEL_0_Pin GPIO_PIN_9
+#define DIGIT_SEL_0_GPIO_Port GPIOC
+#define SPI_LATCH_Pin GPIO_PIN_9
+#define SPI_LATCH_GPIO_Port GPIOA
 #define TMS_Pin GPIO_PIN_13
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14
 #define TCK_GPIO_Port GPIOA
 #define SWO_Pin GPIO_PIN_3
 #define SWO_GPIO_Port GPIOB
-#define SPI_LATCH_Pin GPIO_PIN_4
-#define SPI_LATCH_GPIO_Port GPIOB
-#define DIGIT_2_SEL_Pin GPIO_PIN_8
-#define DIGIT_2_SEL_GPIO_Port GPIOB
-#define DIGIT_4_SEL_Pin GPIO_PIN_9
-#define DIGIT_4_SEL_GPIO_Port GPIOB
+#define DIGIT_SEL_2_Pin GPIO_PIN_8
+#define DIGIT_SEL_2_GPIO_Port GPIOB
+#define DIGIT_SEL_4_Pin GPIO_PIN_9
+#define DIGIT_SEL_4_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 
 #define SEVSEG_QTY_DIGITS 5
+#define DIGIT_SEL_Timer TIM2
+#define SPI_LATCH_Timer TIM1
+
+
 
 /* USER CODE END Private defines */
 
