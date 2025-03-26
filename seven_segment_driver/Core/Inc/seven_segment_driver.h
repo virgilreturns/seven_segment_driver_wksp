@@ -60,8 +60,8 @@ enum ENUM_SEVSEG_DIGIT { //digit index
 
 
 typedef struct {
-	GPIO_TypeDef* DS_port;
 	uint16_t DS_pin;
+	GPIO_TypeDef* DS_port;
 	uint8_t current_char_index;
 } SEVSEG_DIGIT_TypeDef;
 
