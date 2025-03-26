@@ -167,7 +167,7 @@ int main(void)
      //******INTEGRATED TEST*******
 	 //HAL_GPIO_WritePin(SPI_RESET_GPIO_Port, SPI_RESET_Pin, GPIO_PIN_RESET);
 	 //HAL_GPIO_WritePin(SPI_RESET_GPIO_Port, SPI_RESET_Pin, GPIO_PIN_SET);
-	 HAL_SPI_Transmit(&hspi2, myDataa, 1, 1000);
+	 HAL_SPI_Transmit(&sevseg->spi_handler, myDataa, 1, 1000);
 	 HAL_Delay(2);
 
 
