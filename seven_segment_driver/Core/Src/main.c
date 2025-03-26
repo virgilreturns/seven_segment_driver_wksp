@@ -91,7 +91,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim){
 	if (htim->Instance == DIGIT_SEL_Timer){ // ************** TIMER 2 ******************
 
 		//turn off current digit select
-		HAL_GPIO_WritePin(DIGIT_SEL_PINS_ARRAY[refresh_target].port, DIGIT_SEL_PINS_ARRAY[refresh_target].pin, GPIO_PIN_RESET )
+		HAL_GPIO_WritePin(DIGIT_SEL_PINS_ARRAY[refresh_target].port, DIGIT_SEL_PINS_ARRAY[refresh_target].pin, GPIO_PIN_RESET );
 
 		//return to first digit if refresh_target is at last digit
 		if(refresh_target == SEVSEG_QTY_DIGITS - 1){
@@ -192,7 +192,7 @@ int main(void)
   uint8_t myDataa[5] = {ENUM_SEVSEG_CHAR_n, ENUM_SEVSEG_CHAR_E, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_o};
   SEVSEG_StoreDataBuf(&sevseg, myDataa); //stores enum indexes (user-defined-pointers) into each DIGIT in sevseg.digits_select[DIGIT]
 
-  // STATE: PLAY
+  // replace 2nd arg with refresh_target to start the refresh loop
 
   SEVSEG_DigitTx(&sevseg, ENUM_SEVSEG_DIGIT_0); // for testing transmission of a single byte to a single digit, not be used in main or a design
 
@@ -518,6 +518,7 @@ static void MX_GPIO_Init(void)
 static void SEVSEG_Init(){
 
 	refresh_target = ENUM_SEVSEG_DIGIT_0;
+	button_debounce = DEBOUNCE_TRUE;
 
 	GPIO_PIN_TypeDef DIGIT_SEL_PINS_ARRAY[SEVSEG_QTY_DIGITS] = {
 			[ENUM_SEVSEG_DIGIT_0].port = DIGIT_SEL_0_GPIO_Port,

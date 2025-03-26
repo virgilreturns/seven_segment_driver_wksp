@@ -4,11 +4,12 @@
 					 : (COMPLETED 3/21/2025) SHIFT REGISTER + 7 SEGMENT DISPLAY, (basic test) make sure digital 0 actually is ground
 					 : (COMPLETED 3/21/2025) SHIFT REGISTER + 5 DIGIT 7 SEGMENT DISPLAY 
 					 : (COMPLETED 3/24/2025) SPI COMMUNICATION + LOGIC ANALYZER 
-					 : (INCOMPLETE) SPI COMMUNICATION WITH SHIFT REGISTER + 7 SEGMENT DISPLAY (1 digit, 1 character)
-					 : (INCOMPLETE) CODE ARCHITECTURE FOR MULTIPLEXING DIGITS, ACCURATE DELAYS BETWEEN TRANSMISSION
+					 : (COMPLETED 3/25/2025) SPI COMMUNICATION WITH SHIFT REGISTER + 7 SEGMENT DISPLAY (1 digit, 1 character)
+					 : (COMPLETED 3/26/2025) CODE ARCHITECTURE FOR MULTIPLEXING DIGITS, ACCURATE DELAYS BETWEEN TRANSMISSION
 					 : (INCOMPLETE) SPI COMMUNICATION WITH SHIFT REGISTER + 5 DIGIT 7 SEGMENT DISPLAY (use full data buf, see)
 					   CHECK GPIO CONTROL PINS, DIGITAL SELECT, LATCH, TIMERS 1,2 requires debugging
-					 : (COMPLETE 3/25/2025) CODE ARCHITECTURE FOR BUTTON USER INTERFACE, DEBOUNCE? EXTI CALLBACKS? 
+					 : (COMPLETED 3/25/2025) CODE ARCHITECTURE FOR BUTTON USER INTERFACE, DEBOUNCE? EXTI CALLBACKS?
+					 : (INCOMPLETE) CODE REVISION FOR BUTTON UI IN CONFORMANCE TO NEW STATE MACHINE DESIGN (config & normal)
 
 3/17/2025
   The 74HC595 shift register will be driving up to 7 LEDs. It has a max total output of 70 mA and 35 mA for a single pin.
@@ -92,7 +93,7 @@
 
 	Completed testing SPI communication with logic analyzer. Tested data buffers: (0xFF, 0x33, 0x88, {ASCII_TO_ENUM("HELLo") })
 	
-	KEY TAKEWAYS: increase prescaler to decrease the SPI frequency to ~1 Mhz. APB1 peripheral I believe for SPI2. Sysclk / 16 ~ 1Mhz.
+	KEY TAKEAWAYS: increase prescaler to decrease the SPI frequency to ~1 Mhz. APB1 peripheral I believe for SPI2. Sysclk / 16 ~ 1Mhz.
 	Sample frequency should be at least 4 times greater than the transmission frequency.
 
 	There is a bug where the logic analyzer can accurate detect the first buffer, but will fall out of alignment. Doesn't start reading
@@ -103,3 +104,16 @@
 	TODO: CREATE PULSE FUNCTION, ADJUST CLOCK FREQ, TRANSMISSION SEQUENCE
 	      TIMING REQUIREMENTS: max CLK speed at 2.0 V = 5 Mhz, 4.5 V = 25 Mhz. Pulse Duration SRCLR 100 ns at 2V,
 	      SWITCHING CHARACTERISTICS (input to output): ~250 ns
+
+ 3/25/2025
+	
+	Completed testing SPI communication with shift register + one digit display. 
+	Tested data: (ENUM_0, - ENUM_3, ENUM_H, ENUM_n, ENUM_o)
+
+	KEY TAKEAWAYS: ENUM_SEVSEG_CHAR list is not accurately defined, at least for some of the letters.
+				 : SPI Could be faster, but I won't be able to read the logic on the analyzer...
+				 : Might increase SPI CLk from 1 Mhz to 5 Mhz (max)
+	
+	TODO: TEST/DEBUG ENTIRE REFRESH CYCLE/INTERRUPT CHAIN, watch LATCH_pin, DS_pin, TIMERs, SPI_pins, using Live Expressions
+
+

@@ -10,7 +10,7 @@ extern const uint16_t INDEX_FROM_ENUM[];
 
 typedef enum __DEBOUNCE_STATE {
 	DEBOUNCE_FALSE = 0,
-	DEBOUNCED_TRUE = 1
+	DEBOUNCE_TRUE = 1
 } DEBOUNCE_Typedef;
 
 
