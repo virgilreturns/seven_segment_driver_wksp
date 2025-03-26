@@ -66,7 +66,7 @@ typedef struct {
 } SEVSEG_DIGIT_TypeDef;
 
 typedef struct {
-	const SPI_HandleTypeDef* spi_handler;
+	SPI_HandleTypeDef* spi_handler;
 	SEVSEG_DIGIT_TypeDef digit_select[SEVSEG_QTY_DIGITS];
 } SEVSEG_DISPLAY_TypeDef;
 

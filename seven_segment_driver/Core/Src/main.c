@@ -194,7 +194,7 @@ int main(void)
 
   // replace 2nd arg with refresh_target to start the refresh loop
 
-  SEVSEG_DigitTx(&sevseg, ENUM_SEVSEG_DIGIT_0); // for testing transmission of a single byte to a single digit, not be used in main or a design
+  //SEVSEG_DigitTx(&sevseg, ENUM_SEVSEG_DIGIT_0); // for testing transmission of a single byte to a single digit, not be used in main or a design
 
   /* USER CODE END 2 */
 
@@ -208,7 +208,8 @@ int main(void)
      //******INTEGRATED TEST*******
 	 //HAL_GPIO_WritePin(SPI_RESET_GPIO_Port, SPI_RESET_Pin, GPIO_PIN_RESET);
 	 //HAL_GPIO_WritePin(SPI_RESET_GPIO_Port, SPI_RESET_Pin, GPIO_PIN_SET);
-	 HAL_SPI_Transmit(&sevseg->spi_handler, myDataa, 1, 1000);
+
+	 HAL_SPI_Transmit(sevseg.spi_handler, myDataa, 1, 1000);
 	 HAL_Delay(2);
 
 
@@ -564,10 +565,12 @@ static void SEVSEG_Init(){
 			  .current_char_index = 0
 	};
 
-	SEVSEG_DISPLAY_TypeDef sevseg = {
-			  .spi_handler = &hspi2,
-			  .digit_select = { DIGIT_0, DIGIT_1, DIGIT_2, DIGIT_3, DIGIT_4 },
-	};
+	sevseg.spi_handler = &hspi2;
+	sevseg.digit_select[0] = DIGIT_0;
+	sevseg.digit_select[1] = DIGIT_1;
+	sevseg.digit_select[2] = DIGIT_2;
+	sevseg.digit_select[3] = DIGIT_3;
+	sevseg.digit_select[4] = DIGIT_4;
 
 }
 
