@@ -147,9 +147,13 @@ void HAL_GPIO_EXTI_Callback(uint16_t pin){
 	return;
 }
 
-void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef*){
+void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef* hspi){
+	// PASSES LED TEST
 	HAL_GPIO_WritePin(SPI_LATCH_GPIO_Port, SPI_LATCH_Pin, GPIO_PIN_SET);
-	HAL_TIM_Base_Start_IT(&htim1);
+	// DO NOT USE HAL(DELAY) With interrupts...
+	//HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(SPI_LATCH_GPIO_Port, SPI_LATCH_Pin, GPIO_PIN_RESET);
+	//HAL_TIM_Base_Start_IT(&htim1);
 
 }
 
@@ -189,7 +193,7 @@ int main(void)
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
  
-  uint8_t myDataa[5] = {ENUM_SEVSEG_CHAR_n, ENUM_SEVSEG_CHAR_E, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_o};
+  uint8_t myDataa[5] = {ENUM_SEVSEG_CHAR_H, ENUM_SEVSEG_CHAR_E, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_o};
   SEVSEG_StoreDataBuf(&sevseg, myDataa); //stores enum indexes (user-defined-pointers) into each DIGIT in sevseg.digits_select[DIGIT]
 
   // replace 2nd arg with refresh_target to start the refresh loop
@@ -200,17 +204,23 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  //HAL_SPI_Transmit(sevseg.spi_handler, myDataa, 1, 1000);
+   //NON-BLOCKING SO LEAVE THE WHILE LOOP
+
+
   while (1)
   {
 
-	 //HAL_SPI_Transmit(&hspi2, myDataa ,5,1000)
+	  //HAL_SPI_Transmit(sevseg.spi_handler, myDataa, 1, 1000);
+	  SEVSEG_DigitTx(&sevseg, ENUM_SEVSEG_DIGIT_3);
+	  HAL_Delay(2);
 
      //******INTEGRATED TEST*******
 	 //HAL_GPIO_WritePin(SPI_RESET_GPIO_Port, SPI_RESET_Pin, GPIO_PIN_RESET);
 	 //HAL_GPIO_WritePin(SPI_RESET_GPIO_Port, SPI_RESET_Pin, GPIO_PIN_SET);
 
-	 HAL_SPI_Transmit(sevseg.spi_handler, myDataa, 1, 1000);
-	 HAL_Delay(2);
+
+
 
 
     /* USER CODE END WHILE */
@@ -319,8 +329,6 @@ static void MX_TIM1_Init(void)
 
   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
-  TIM_OC_InitTypeDef sConfigOC = {0};
-  TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
 
   /* USER CODE BEGIN TIM1_Init 1 */
 
@@ -341,46 +349,15 @@ static void MX_TIM1_Init(void)
   {
     Error_Handler();
   }
-  if (HAL_TIM_OC_Init(&htim1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_TIM_OnePulse_Init(&htim1, TIM_OPMODE_SINGLE) != HAL_OK)
-  {
-    Error_Handler();
-  }
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
   {
     Error_Handler();
   }
-  sConfigOC.OCMode = TIM_OCMODE_TIMING;
-  sConfigOC.Pulse = 1-1;
-  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-  sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
-  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-  sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
-  sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
-  if (HAL_TIM_OC_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
-  sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
-  sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
-  sBreakDeadTimeConfig.DeadTime = 0;
-  sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
-  sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
-  sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
-  if (HAL_TIMEx_ConfigBreakDeadTime(&htim1, &sBreakDeadTimeConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
   /* USER CODE BEGIN TIM1_Init 2 */
 
   /* USER CODE END TIM1_Init 2 */
-  HAL_TIM_MspPostInit(&htim1);
 
 }
 
@@ -451,7 +428,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, LD2_Pin|SPI_LATCH_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, SPI_RESET_Pin|DIGIT_SEL_2_Pin|DIGIT_SEL_4_Pin, GPIO_PIN_RESET);
@@ -499,6 +476,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.Alternate = GPIO_AF0_MCO;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : SPI_LATCH_Pin */
+  GPIO_InitStruct.Pin = SPI_LATCH_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  HAL_GPIO_Init(SPI_LATCH_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : DIGIT_SEL_2_Pin DIGIT_SEL_4_Pin */
   GPIO_InitStruct.Pin = DIGIT_SEL_2_Pin|DIGIT_SEL_4_Pin;
@@ -548,20 +532,20 @@ static void SEVSEG_Init(){
 	};
 
 	SEVSEG_DIGIT_TypeDef DIGIT_2 = {
-			  .DS_pin = DIGIT_SEL_1_Pin,
-			  .DS_port = DIGIT_SEL_1_GPIO_Port,
+			  .DS_pin = DIGIT_SEL_2_Pin,
+			  .DS_port = DIGIT_SEL_2_GPIO_Port,
 			  .current_char_index = 0
 	};
 
 	SEVSEG_DIGIT_TypeDef DIGIT_3 = {
-			  .DS_pin = DIGIT_SEL_1_Pin,
-			  .DS_port = DIGIT_SEL_1_GPIO_Port,
+			  .DS_pin = DIGIT_SEL_3_Pin,
+			  .DS_port = DIGIT_SEL_3_GPIO_Port,
 			  .current_char_index = 0
 	};
 
 	SEVSEG_DIGIT_TypeDef DIGIT_4 = {
-			  .DS_pin = DIGIT_SEL_1_Pin,
-			  .DS_port = DIGIT_SEL_1_GPIO_Port,
+			  .DS_pin = DIGIT_SEL_4_Pin,
+			  .DS_port = DIGIT_SEL_4_GPIO_Port,
 			  .current_char_index = 0
 	};
 
