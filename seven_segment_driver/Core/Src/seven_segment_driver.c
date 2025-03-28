@@ -150,6 +150,23 @@ HAL_StatusTypeDef SEVSEG_Write(SEVSEG_DISPLAY_TypeDef* sevseg) {
 // Array of all ENUM_SEVSEG_CHAR values
 
 
+void SEVSEG_Cycle(SEVSEG_DISPLAY_TypeDef* sevseg, TIM_HandleTypeDef* htim1) {
+switch (sevseg->cycle_state)
+
+case CYCLE_STATE_0:
+    break;
+case CYCLE_STATE_1:
+    SEVSEG_DigitTx(sevseg, sevseg->refresh_target);
+    sevseg->cycle_state = CYCLE_STATE_0;
+    break;
+case CYCLE_STATE_2:
+    HAL_TIM_Base_Start_IT(htim1);
+    sevseg->cycle_state = CYCLE_STATE_0;
+    break;
+case CYCLE_STATE_3:
+    break;
+}
+
 
 const enum ENUM_SEVSEG_CHAR ASCII_to_SEVSEG_CHAR[255] = {
     ['0'] = ENUM_SEVSEG_CHAR_0,

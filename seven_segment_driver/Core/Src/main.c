@@ -52,6 +52,7 @@ SEVSEG_DISPLAY_TypeDef sevseg;
 DEBOUNCE_Typedef button_debounce;
 enum ENUM_SEVSEG_DIGIT refresh_target; //used to cycle through array of digits
 GPIO_PIN_TypeDef DIGIT_SEL_PINS_ARRAY[SEVSEG_QTY_DIGITS]; //containing gpio pins of all digits
+CYCLE_STATE cycle_state;
 
 /* USER CODE END PV */
 
@@ -149,11 +150,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t pin){
 
 void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef* hspi){
 	// PASSES LED TEST
-	HAL_GPIO_WritePin(SPI_LATCH_GPIO_Port, SPI_LATCH_Pin, GPIO_PIN_SET);
-	// DO NOT USE HAL(DELAY) With interrupts...
-	//HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(SPI_LATCH_GPIO_Port, SPI_LATCH_Pin, GPIO_PIN_RESET);
-	//HAL_TIM_Base_Start_IT(&htim1);
+	sevseg.cycle_state = CYCLE_STATE_2;
 
 }
 
@@ -504,6 +501,7 @@ static void SEVSEG_Init(){
 
 	refresh_target = ENUM_SEVSEG_DIGIT_0;
 	button_debounce = DEBOUNCE_TRUE;
+	cycle_state = CYCLE_STATE_0;
 
 	GPIO_PIN_TypeDef DIGIT_SEL_PINS_ARRAY[SEVSEG_QTY_DIGITS] = {
 			[ENUM_SEVSEG_DIGIT_0].port = DIGIT_SEL_0_GPIO_Port,
@@ -550,11 +548,13 @@ static void SEVSEG_Init(){
 	};
 
 	sevseg.spi_handler = &hspi2;
-	sevseg.digit_select[0] = DIGIT_0;
-	sevseg.digit_select[1] = DIGIT_1;
-	sevseg.digit_select[2] = DIGIT_2;
-	sevseg.digit_select[3] = DIGIT_3;
-	sevseg.digit_select[4] = DIGIT_4;
+	sevseg.digit_select[0] = &DIGIT_0;
+	sevseg.digit_select[1] = &DIGIT_1;
+	sevseg.digit_select[2] = &DIGIT_2;
+	sevseg.digit_select[3] = &DIGIT_3;
+	sevseg.digit_select[4] = &DIGIT_4;
+	sevseg.cycle_state = &cycle_state;
+	sevseg.refresh_target = &refresh_target;
 
 }
 

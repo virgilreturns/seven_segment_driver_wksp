@@ -7,6 +7,12 @@
 
 extern const uint16_t INDEX_FROM_ENUM[];
 
+typedef enum __CYCLE_STATE {
+	CYCLE_STATE_0 = 0,
+	CYCLE_STATE_1 = 1,
+	CYCLE_STATE_2 = 2,
+	CYCLE_STATE_3 = 3
+} CYCLE_STATE;
 
 typedef enum __DEBOUNCE_STATE {
 	DEBOUNCE_FALSE = 0,
@@ -67,12 +73,15 @@ typedef struct {
 
 typedef struct {
 	SPI_HandleTypeDef* spi_handler;
-	SEVSEG_DIGIT_TypeDef digit_select[SEVSEG_QTY_DIGITS];
+	SEVSEG_DIGIT_TypeDef* digit_select[SEVSEG_QTY_DIGITS];
+	CYCLE_STATE* cycle_state;
+	SEVSEG_DIGIT_TypeDef* refresh_target
 } SEVSEG_DISPLAY_TypeDef;
 
 
 void SEVSEG_StoreDataBuf(SEVSEG_DISPLAY_TypeDef* seveg, enum ENUM_SEVSEG_CHAR data[]);
 HAL_StatusTypeDef SEVSEG_DigitTx(SEVSEG_DISPLAY_TypeDef* sevseg, enum ENUM_SEVSEG_DIGIT digit);
 HAL_StatusTypeDef SEVSEG_Write(SEVSEG_DISPLAY_TypeDef* sevseg);
+void SEVSEG_Cycle();
 
 #endif
