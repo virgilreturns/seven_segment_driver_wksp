@@ -49,11 +49,11 @@ TIM_HandleTypeDef htim2;
 /* USER CODE BEGIN PV */
 
 SEVSEG_DISPLAY_TypeDef sevseg;
-volatile DEBOUNCE_Typedef button_debounce;
-enum ENUM_SEVSEG_DIGIT refresh_target; //used to cycle through array of digits
+//volatile DEBOUNCE_Typedef button_debounce;
+//enum ENUM_SEVSEG_DIGIT refresh_target; //used to cycle through array of digits
 GPIO_PIN_TypeDef DIGIT_SEL_PINS_ARRAY[SEVSEG_QTY_DIGITS]; //containing gpio pins of all digits
-volatile CYCLE_STATE cycle_state;
-volatile uint8_t tim1up, tim2up;
+//volatile CYCLE_STATE cycle_state;
+//volatile uint8_t tim1up, tim2up;
 
 
 /* USER CODE END PV */
@@ -210,14 +210,19 @@ tim2up = 0; time1up = 0;
 
   while (1)
   {
+	SEVSEG_DigitTx(&sevseg);
+	if (not(success)) continue;
 
-	  if (tim1up){
-	  
-	  };
+	HAL_GPIO_WritePin(SPI_LATCH_GPIO_Port, SPI_LATCH_Pin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(SPI_LATCH_GPIO_Port, SPI_LATCH_Pin, GPIO_PIN_RESET);
 
-	  if (time2up){
-	  };
-	  
+	SEVSEG_DIGIT_TypeDef* temp = (sevseg.digit_select[sevseg.refresh_target]);
+	HAL_GPIO_WritePin(temp->port, temp->pin, GPIO_PIN_SET);
+	HAL_Delay(1000);	
+	HAL_GPIO_WritePin(temp->port, temp->pin, GPIO_PIN_RESET);
+	
+	sevseg.refresh_target += 1;
+	
 	  /* TIM2 UP
    		HAL_GPIO_WritePin(DIGIT_SEL_PINS_ARRAY[refresh_target].port, DIGIT_SEL_PINS_ARRAY[refresh_target].pin, GPIO_PIN_RESET );
 
