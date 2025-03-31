@@ -7,6 +7,7 @@
 
 extern const uint16_t INDEX_FROM_ENUM[];
 
+
 typedef enum __CYCLE_STATE {
 	CYCLE_STATE_0 = 0,
 	CYCLE_STATE_1 = 1,
@@ -73,9 +74,9 @@ typedef struct {
 
 typedef struct {
 	SPI_HandleTypeDef* spi_handler;
-	SEVSEG_DIGIT_TypeDef* digit_select[SEVSEG_QTY_DIGITS];
-	CYCLE_STATE* cycle_state;
-	SEVSEG_DIGIT_TypeDef* refresh_target
+	SEVSEG_DIGIT_TypeDef digit_select[SEVSEG_QTY_DIGITS];
+	CYCLE_STATE cycle_state;
+	enum ENUM_SEVSEG_DIGIT refresh_target;
 } SEVSEG_DISPLAY_TypeDef;
 
 

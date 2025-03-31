@@ -60,6 +60,7 @@
 
 extern GPIO_PIN_TypeDef DIGIT_SEL_PINS_ARRAY[SEVSEG_QTY_DIGITS];
 
+
 const uint16_t INDEX_FROM_ENUM[0x102] = {
     [ENUM_SEVSEG_CHAR_0] = 0,
     [ENUM_SEVSEG_CHAR_1] = 1,
@@ -150,21 +151,26 @@ HAL_StatusTypeDef SEVSEG_Write(SEVSEG_DISPLAY_TypeDef* sevseg) {
 // Array of all ENUM_SEVSEG_CHAR values
 
 
-void SEVSEG_Cycle(SEVSEG_DISPLAY_TypeDef* sevseg, TIM_HandleTypeDef* htim1) {
-switch (sevseg->cycle_state)
+void SEVSEG_Cycle(SEVSEG_DISPLAY_TypeDef* sevseg, TIM_HandleTypeDef* htim1, TIM_HandleTypeDef* htim2) {
 
+switch ((sevseg->cycle_state)) {
 case CYCLE_STATE_0:
     break;
 case CYCLE_STATE_1:
-    SEVSEG_DigitTx(sevseg, sevseg->refresh_target);
-    sevseg->cycle_state = CYCLE_STATE_0;
+	sevseg->cycle_state = CYCLE_STATE_0;
+    SEVSEG_DigitTx(sevseg, (sevseg->refresh_target));
     break;
 case CYCLE_STATE_2:
+	sevseg->cycle_state = CYCLE_STATE_0;
     HAL_TIM_Base_Start_IT(htim1);
+    break;
+case CYCLE_STATE_3: // digital selection pulse
+    HAL_GPIO_WritePin(DIGIT_SEL_PINS_ARRAY[(sevseg->refresh_target)].port, DIGIT_SEL_PINS_ARRAY[(sevseg->refresh_target)].pin, GPIO_PIN_SET);
     sevseg->cycle_state = CYCLE_STATE_0;
+    HAL_TIM_Base_Start_IT(htim2);
+
     break;
-case CYCLE_STATE_3:
-    break;
+	}
 }
 
 
