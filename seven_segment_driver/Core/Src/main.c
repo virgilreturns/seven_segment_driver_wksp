@@ -49,9 +49,10 @@ TIM_HandleTypeDef htim2;
 /* USER CODE BEGIN PV */
 
 SEVSEG_DISPLAY_TypeDef sevseg;
-DEBOUNCE_Typedef button_debounce;
+DEBOUNCE_STATE button_debounce;
 enum ENUM_SEVSEG_DIGIT refresh_target; //used to cycle through array of digits
 GPIO_PIN_TypeDef DIGIT_SEL_PINS_ARRAY[SEVSEG_QTY_DIGITS]; //containing gpio pins of all digits
+SEVSEG_CYCLE_STATE cycle_state;
 
 /* USER CODE END PV */
 
@@ -520,6 +521,7 @@ static void SEVSEG_Init(){
 
 	refresh_target = ENUM_SEVSEG_DIGIT_0;
 	button_debounce = DEBOUNCE_TRUE;
+	cycle_state = SEVSEG_CYCLE_1; // immediately start transmitting stored data
 
 	GPIO_PIN_TypeDef DIGIT_SEL_PINS_ARRAY[SEVSEG_QTY_DIGITS] = {
 			[ENUM_SEVSEG_DIGIT_0].port = DIGIT_SEL_0_GPIO_Port,
@@ -571,6 +573,7 @@ static void SEVSEG_Init(){
 	sevseg.digit_select[2] = DIGIT_2;
 	sevseg.digit_select[3] = DIGIT_3;
 	sevseg.digit_select[4] = DIGIT_4;
+	sevseg.cycle_state = &cycle_state;
 
 }
 
