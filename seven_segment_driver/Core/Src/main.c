@@ -49,10 +49,12 @@ TIM_HandleTypeDef htim2;
 /* USER CODE BEGIN PV */
 
 SEVSEG_DISPLAY_TypeDef sevseg;
-DEBOUNCE_STATE button_debounce;
-enum ENUM_SEVSEG_DIGIT refresh_target; //used to cycle through array of digits
+//volatile DEBOUNCE_Typedef button_debounce;
+//enum ENUM_SEVSEG_DIGIT refresh_target; //used to cycle through array of digits
 GPIO_PIN_TypeDef DIGIT_SEL_PINS_ARRAY[SEVSEG_QTY_DIGITS]; //containing gpio pins of all digits
-SEVSEG_CYCLE_STATE cycle_state;
+//volatile CYCLE_STATE cycle_state;
+//volatile uint8_t tim1up, tim2up;
+
 
 /* USER CODE END PV */
 
@@ -89,26 +91,22 @@ volatile enum ENUM_SEVSEG_DIGIT cursor_selection = ENUM_SEVSEG_DIGIT_0;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim){
 
+	if (htim->Instance == SPI_LATCH_Timer){ // ************** TIMER 1 ******************
+		(sevseg.cycle_state) = CYCLE_STATE_3;
 	if (htim->Instance == DIGIT_SEL_Timer){ // ************** TIMER 2 ******************
-
-		//turn off current digit select
-		HAL_GPIO_WritePin(DIGIT_SEL_PINS_ARRAY[refresh_target].port, DIGIT_SEL_PINS_ARRAY[refresh_target].pin, GPIO_PIN_RESET );
-
-		//return to first digit if refresh_target is at last digit
-		if(refresh_target == SEVSEG_QTY_DIGITS - 1){
-			refresh_target = ENUM_SEVSEG_DIGIT_0;
-		} else refresh_target++;
-
-		SEVSEG_DigitTx(&sevseg, refresh_target); //sync start with DIGIT_SEL_TIMER, sets sel GPIO,  , toggles + enables -> SPI_LATCH_Timer
-
+		tim2up = 1;
 	}
 
-	// ****************************************************************************  END
+	else {
+	 sevseg.cycle_state = CYCLE_STATE_1;
+	    if(sevseg.refresh_target == SEVSEG_QTY_DIGITS - 1){
+	    			sevseg.refresh_target = ENUM_SEVSEG_DIGIT_0;
+	    		} else sevseg.refresh_target++;
 
-	if (htim->Instance == SPI_LATCH_Timer){ // ************** TIMER 1 ******************
-		HAL_GPIO_WritePin(SPI_LATCH_GPIO_Port, SPI_LATCH_Pin, GPIO_PIN_RESET);
-		HAL_GPIO_WritePin(DIGIT_SEL_PINS_ARRAY[refresh_target].port, DIGIT_SEL_PINS_ARRAY[refresh_target].pin, GPIO_PIN_SET); //activate digit select pin: HIGH
-		HAL_TIM_Base_Start_IT(&htim2);
+	    HAL_GPIO_WritePin(DIGIT_SEL_PINS_ARRAY[(sevseg.refresh_target)].port, DIGIT_SEL_PINS_ARRAY[(sevseg.refresh_target)].pin, GPIO_PIN_RESET);
+	// ****************************************************************************  END
+	else if (htim->Instance == SPI_LATCH_Timer){ // ************** TIMER 1 ******************
+		tim1up = 1;
 	}
 }
 
@@ -148,10 +146,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t pin){
 	return;
 }
 
-void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef*){
-	HAL_GPIO_WritePin(SPI_LATCH_GPIO_Port, SPI_LATCH_Pin, GPIO_PIN_SET);
-	HAL_TIM_Base_Start_IT(&htim1);
-
+void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef* hspi){
+	// PASSES LED TEST
+	sevseg.cycle_state = CYCLE_STATE_2;
 }
 
 /* USER CODE END 0 */
@@ -164,7 +161,23 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
+switch (sevseg->cycle_state)
 
+case CYCLE_STATE_0:
+    break;
+case CYCLE_STATE_1:
+    SEVSEG_DigitTx(sevseg, sevseg->refresh_target);
+    sevseg->cycle_state = CYCLE_STATE_0;
+    break;
+case CYCLE_STATE_2:
+    HAL_TIM_Base_Start_IT(htim1);
+    sevseg->cycle_state = CYCLE_STATE_0;
+    break;
+case CYCLE_STATE_3:
+    break;
+}
+
+tim2up = 0; time1up = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -190,7 +203,7 @@ int main(void)
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
  
-  uint8_t myDataa[5] = {ENUM_SEVSEG_CHAR_n, ENUM_SEVSEG_CHAR_E, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_o};
+  uint8_t myDataa[5] = {ENUM_SEVSEG_CHAR_H, ENUM_SEVSEG_CHAR_E, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_o};
   SEVSEG_StoreDataBuf(&sevseg, myDataa); //stores enum indexes (user-defined-pointers) into each DIGIT in sevseg.digits_select[DIGIT]
 
   // replace 2nd arg with refresh_target to start the refresh loop
@@ -204,14 +217,45 @@ int main(void)
   while (1)
   {
 
-	 //HAL_SPI_Transmit(&hspi2, myDataa ,5,1000)
+	  SEVSEG_Cycle(&sevseg, &htim1, &htim2);
+	SEVSEG_DigitTx(&sevseg);
+	if (not(success)) continue;
+
+	HAL_GPIO_WritePin(SPI_LATCH_GPIO_Port, SPI_LATCH_Pin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(SPI_LATCH_GPIO_Port, SPI_LATCH_Pin, GPIO_PIN_RESET);
+
+	SEVSEG_DIGIT_TypeDef* temp = (sevseg.digit_select[sevseg.refresh_target]);
+	HAL_GPIO_WritePin(temp->port, temp->pin, GPIO_PIN_SET);
+	HAL_Delay(1000);	
+	HAL_GPIO_WritePin(temp->port, temp->pin, GPIO_PIN_RESET);
+	
+	sevseg.refresh_target += 1;
+	
+	  /* TIM2 UP
+   		HAL_GPIO_WritePin(DIGIT_SEL_PINS_ARRAY[refresh_target].port, DIGIT_SEL_PINS_ARRAY[refresh_target].pin, GPIO_PIN_RESET );
+
+		//return to first digit if refresh_target is at last digit
+		if(refresh_target == SEVSEG_QTY_DIGITS - 1){
+			refresh_target = ENUM_SEVSEG_DIGIT_0;
+		} else refresh_target++;
+
+		SEVSEG_DigitTx(&sevseg, refresh_target);
+
+		TIM1 up
+   		HAL_GPIO_WritePin(SPI_LATCH_GPIO_Port, SPI_LATCH_Pin, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(DIGIT_SEL_PINS_ARRAY[refresh_target].port, DIGIT_SEL_PINS_ARRAY[refresh_target].pin, GPIO_PIN_SET); //activate digit select pin: HIGH
+		HAL_TIM_Base_Start_IT(&htim2);
+   	  */
+	  //HAL_SPI_Transmit(sevseg.spi_handler, myDataa, 1, 1000);
+	  
+	  
 
      //******INTEGRATED TEST*******
 	 //HAL_GPIO_WritePin(SPI_RESET_GPIO_Port, SPI_RESET_Pin, GPIO_PIN_RESET);
 	 //HAL_GPIO_WritePin(SPI_RESET_GPIO_Port, SPI_RESET_Pin, GPIO_PIN_SET);
 
-	 HAL_SPI_Transmit(sevseg.spi_handler, myDataa, 1, 1000);
-	 HAL_Delay(2);
+
+
 
 
     /* USER CODE END WHILE */
@@ -327,9 +371,9 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 0;
+  htim1.Init.Prescaler = 16-1;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 16-1;
+  htim1.Init.Period = 1;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -357,7 +401,7 @@ static void MX_TIM1_Init(void)
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_TIMING;
-  sConfigOC.Pulse = 1-1;
+  sConfigOC.Pulse = 16-1;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
@@ -415,10 +459,6 @@ static void MX_TIM2_Init(void)
   }
   sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
   if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_TIM_OnePulse_Init(&htim2, TIM_OPMODE_SINGLE) != HAL_OK)
   {
     Error_Handler();
   }
@@ -521,7 +561,7 @@ static void SEVSEG_Init(){
 
 	refresh_target = ENUM_SEVSEG_DIGIT_0;
 	button_debounce = DEBOUNCE_TRUE;
-	cycle_state = SEVSEG_CYCLE_1; // immediately start transmitting stored data
+	cycle_state = CYCLE_STATE_1;
 
 	GPIO_PIN_TypeDef DIGIT_SEL_PINS_ARRAY[SEVSEG_QTY_DIGITS] = {
 			[ENUM_SEVSEG_DIGIT_0].port = DIGIT_SEL_0_GPIO_Port,
@@ -550,20 +590,20 @@ static void SEVSEG_Init(){
 	};
 
 	SEVSEG_DIGIT_TypeDef DIGIT_2 = {
-			  .DS_pin = DIGIT_SEL_1_Pin,
-			  .DS_port = DIGIT_SEL_1_GPIO_Port,
+			  .DS_pin = DIGIT_SEL_2_Pin,
+			  .DS_port = DIGIT_SEL_2_GPIO_Port,
 			  .current_char_index = 0
 	};
 
 	SEVSEG_DIGIT_TypeDef DIGIT_3 = {
-			  .DS_pin = DIGIT_SEL_1_Pin,
-			  .DS_port = DIGIT_SEL_1_GPIO_Port,
+			  .DS_pin = DIGIT_SEL_3_Pin,
+			  .DS_port = DIGIT_SEL_3_GPIO_Port,
 			  .current_char_index = 0
 	};
 
 	SEVSEG_DIGIT_TypeDef DIGIT_4 = {
-			  .DS_pin = DIGIT_SEL_1_Pin,
-			  .DS_port = DIGIT_SEL_1_GPIO_Port,
+			  .DS_pin = DIGIT_SEL_4_Pin,
+			  .DS_port = DIGIT_SEL_4_GPIO_Port,
 			  .current_char_index = 0
 	};
 
@@ -573,7 +613,8 @@ static void SEVSEG_Init(){
 	sevseg.digit_select[2] = DIGIT_2;
 	sevseg.digit_select[3] = DIGIT_3;
 	sevseg.digit_select[4] = DIGIT_4;
-	sevseg.cycle_state = &cycle_state;
+	sevseg.cycle_state = cycle_state;
+	sevseg.refresh_target = refresh_target;
 
 }
 

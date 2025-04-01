@@ -14,6 +14,13 @@ typedef enum __CYCLE_STATE {
 	SEVSEG_CYCLE_3
 } SEVSEG_CYCLE_STATE;
 
+typedef enum __CYCLE_STATE {
+	CYCLE_STATE_0 = 0,
+	CYCLE_STATE_1 = 1,
+	CYCLE_STATE_2 = 2,
+	CYCLE_STATE_3 = 3
+} CYCLE_STATE;
+
 typedef enum __DEBOUNCE_STATE {
 	DEBOUNCE_FALSE = 0,
 	DEBOUNCE_TRUE = 1
@@ -73,14 +80,14 @@ typedef struct {
 typedef struct {
 	SPI_HandleTypeDef* spi_handler;
 	SEVSEG_DIGIT_TypeDef digit_select[SEVSEG_QTY_DIGITS];
-	SEVSEG_CYCLE_STATE cycle_state;
+	CYCLE_STATE cycle_state;
+	enum ENUM_SEVSEG_DIGIT refresh_target;
 } SEVSEG_DISPLAY_TypeDef;
 
 
 void SEVSEG_StoreDataBuf(SEVSEG_DISPLAY_TypeDef* seveg, enum ENUM_SEVSEG_CHAR data[]);
 HAL_StatusTypeDef SEVSEG_DigitTx(SEVSEG_DISPLAY_TypeDef* sevseg, enum ENUM_SEVSEG_DIGIT digit);
 HAL_StatusTypeDef SEVSEG_Write(SEVSEG_DISPLAY_TypeDef* sevseg);
-void SEVSEG_RefreshCycle();
-
+void SEVSEG_Cycle();
 
 #endif
