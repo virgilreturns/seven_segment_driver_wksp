@@ -129,24 +129,16 @@ void SEVSEG_StoreDataBuf(SEVSEG_DISPLAY_TypeDef* sevseg, enum ENUM_SEVSEG_CHAR d
 	}
 };
 
-HAL_StatusTypeDef SEVSEG_DigitTx(SEVSEG_DISPLAY_TypeDef* sevseg, enum ENUM_SEVSEG_DIGIT digit) {
+HAL_StatusTypeDef SEVSEG_DigitTx(SEVSEG_DISPLAY_TypeDef* sevseg) {
 
 	// write data through MOSI (SPI2 handler)
-    HAL_StatusTypeDef success = HAL_SPI_Transmit_IT(sevseg->spi_handler, &(SEVSEG_CHAR_ARRAY[(sevseg->digit_select[digit].current_char_index)]), 1); //send data through MOSI pin
+    HAL_StatusTypeDef success = HAL_SPI_Transmit_IT(sevseg->spi_handler, &(SEVSEG_CHAR_ARRAY[(sevseg->digit_select[sevseg->refresh_target].current_char_index)]), 1); //send data through MOSI pin
 	if (success != HAL_OK) return success; //if error, return error code
 
 	return success;
 };
 
 //FIRST DEMO IMPLREMENTATION: NO 'PLAY' MODE, JUST WRITE 5 CHAR TO 5 DIGIT DISPLAY
-HAL_StatusTypeDef SEVSEG_Write(SEVSEG_DISPLAY_TypeDef* sevseg) {
-	HAL_StatusTypeDef success;
-	for (int i=0; i < SEVSEG_QTY_DIGITS; i++) {
-		success = SEVSEG_DigitTx(sevseg, i);
-		if (success != HAL_OK) return success;
-	}
-	return success;
-};
 
 // Array of all ENUM_SEVSEG_CHAR values
 
@@ -158,7 +150,7 @@ case CYCLE_STATE_0:
     break;
 case CYCLE_STATE_1:
 	sevseg->cycle_state = CYCLE_STATE_0;
-    SEVSEG_DigitTx(sevseg, (sevseg->refresh_target));
+    SEVSEG_DigitTx(sevseg);
     break;
 case CYCLE_STATE_2:
 	sevseg->cycle_state = CYCLE_STATE_0;

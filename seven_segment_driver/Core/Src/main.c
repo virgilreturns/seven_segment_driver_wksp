@@ -137,10 +137,10 @@ int main(void)
 	HAL_GPIO_WritePin(SPI_LATCH_GPIO_Port, SPI_LATCH_Pin, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(SPI_LATCH_GPIO_Port, SPI_LATCH_Pin, GPIO_PIN_RESET);
 
-	SEVSEG_DIGIT_TypeDef* temp = (sevseg.digit_select[sevseg.refresh_target]);
-	HAL_GPIO_WritePin(temp->port, temp->pin, GPIO_PIN_SET);
+	temp = &(sevseg.digit_select[sevseg.refresh_target]);
+	HAL_GPIO_WritePin(temp->DS_port, temp->DS_pin, GPIO_PIN_SET);
 	HAL_Delay(1000);	
-	HAL_GPIO_WritePin(temp->port, temp->pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(temp->DS_port, temp->DS_pin, GPIO_PIN_RESET);
 	
 	sevseg.refresh_target += 1;
     /* USER CODE END WHILE */
@@ -444,10 +444,6 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 static void SEVSEG_Init(){
 
-	refresh_target = ENUM_SEVSEG_DIGIT_0;
-	button_debounce = DEBOUNCE_TRUE;
-	cycle_state = CYCLE_STATE_1;
-
 	GPIO_PIN_TypeDef DIGIT_SEL_PINS_ARRAY[SEVSEG_QTY_DIGITS] = {
 			[ENUM_SEVSEG_DIGIT_0].port = DIGIT_SEL_0_GPIO_Port,
 			[ENUM_SEVSEG_DIGIT_0].pin = DIGIT_SEL_0_Pin,
@@ -462,44 +458,28 @@ static void SEVSEG_Init(){
 
 	};
 
-	SEVSEG_DIGIT_TypeDef DIGIT_0 = {
-			  .DS_pin = DIGIT_SEL_0_Pin,
-			  .DS_port = DIGIT_SEL_0_GPIO_Port,
-			  .current_char_index = 0
-	};
+	sevseg.digit_select[0].DS_pin = DIGIT_SEL_0_Pin;
+	sevseg.digit_select[0].DS_port = DIGIT_SEL_0_GPIO_Port;
+	sevseg.digit_select[0].current_char_index = 0;
 
-	SEVSEG_DIGIT_TypeDef DIGIT_1 = {
-			  .DS_pin = DIGIT_SEL_1_Pin,
-			  .DS_port = DIGIT_SEL_1_GPIO_Port,
-			  .current_char_index = 0
-	};
+	sevseg.digit_select[1].DS_pin = DIGIT_SEL_1_Pin;
+	sevseg.digit_select[1].DS_port = DIGIT_SEL_1_GPIO_Port;
+	sevseg.digit_select[1].current_char_index = 0;
 
-	SEVSEG_DIGIT_TypeDef DIGIT_2 = {
-			  .DS_pin = DIGIT_SEL_2_Pin,
-			  .DS_port = DIGIT_SEL_2_GPIO_Port,
-			  .current_char_index = 0
-	};
+	sevseg.digit_select[2].DS_pin = DIGIT_SEL_2_Pin;
+	sevseg.digit_select[2].DS_port = DIGIT_SEL_2_GPIO_Port;
+	sevseg.digit_select[2].current_char_index = 0;
 
-	SEVSEG_DIGIT_TypeDef DIGIT_3 = {
-			  .DS_pin = DIGIT_SEL_3_Pin,
-			  .DS_port = DIGIT_SEL_3_GPIO_Port,
-			  .current_char_index = 0
-	};
+	sevseg.digit_select[3].DS_pin = DIGIT_SEL_3_Pin;
+	sevseg.digit_select[3].DS_port = DIGIT_SEL_3_GPIO_Port;
+	sevseg.digit_select[3].current_char_index = 0;
 
-	SEVSEG_DIGIT_TypeDef DIGIT_4 = {
-			  .DS_pin = DIGIT_SEL_4_Pin,
-			  .DS_port = DIGIT_SEL_4_GPIO_Port,
-			  .current_char_index = 0
-	};
+	sevseg.digit_select[4].DS_pin = DIGIT_SEL_4_Pin;
+	sevseg.digit_select[4].DS_port = DIGIT_SEL_4_GPIO_Port;
+	sevseg.digit_select[4].current_char_index = 0;
 
-	sevseg.spi_handler = &hspi2;
-	sevseg.digit_select[0] = DIGIT_0;
-	sevseg.digit_select[1] = DIGIT_1;
-	sevseg.digit_select[2] = DIGIT_2;
-	sevseg.digit_select[3] = DIGIT_3;
-	sevseg.digit_select[4] = DIGIT_4;
-	sevseg.cycle_state = cycle_state;
-	sevseg.refresh_target = refresh_target;
+	sevseg.cycle_state = CYCLE_STATE_0;
+	sevseg.refresh_target = ENUM_SEVSEG_DIGIT_0;
 
 }
 
