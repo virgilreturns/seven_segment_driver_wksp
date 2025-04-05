@@ -124,25 +124,34 @@ int main(void)
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   uint8_t myDataa[5] = {ENUM_SEVSEG_CHAR_H, ENUM_SEVSEG_CHAR_E, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_o};
+  uint8_t myDataa2[5] = {8, ENUM_SEVSEG_CHAR_E, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_o};
   SEVSEG_StoreDataBuf(&sevseg, myDataa); //stores enum indexes (user-defined-pointers) into each DIGIT in sevseg.digits_select[DIGIT]
   /* USER CODE END 2 */
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	SEVSEG_Cycle(&sevseg, &htim1, &htim2);
-	SEVSEG_DigitTx(&sevseg);
-	if (not(success)) continue;
 
+	//SEVSEG_DigitTx(&sevseg);
+	//HAL_SPI_Transmit(&hspi2, myDataa[0],1,1000);
+	  enum ENUM_SEVSEG_CHAR TEMP = SEVSEG_CHAR_ARRAY[sevseg.digit_select[sevseg.refresh_target].current_char_index];
+	  //HAL_SPI_Transmit(&hspi2, &(SEVSEG_CHAR_ARRAY[sevseg.digit_select[sevseg.refresh_target].current_char_index]),1,1000);
+	  HAL_SPI_Transmit(&hspi2, myDataa2[0],1,1000);
+/*
 	HAL_GPIO_WritePin(SPI_LATCH_GPIO_Port, SPI_LATCH_Pin, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(SPI_LATCH_GPIO_Port, SPI_LATCH_Pin, GPIO_PIN_RESET);
 
-	temp = &(sevseg.digit_select[sevseg.refresh_target]);
+	SEVSEG_DIGIT_TypeDef *temp = &(sevseg.digit_select[sevseg.refresh_target]);
 	HAL_GPIO_WritePin(temp->DS_port, temp->DS_pin, GPIO_PIN_SET);
-	HAL_Delay(1000);	
+	//HAL_Delay(10);
 	HAL_GPIO_WritePin(temp->DS_port, temp->DS_pin, GPIO_PIN_RESET);
 	
 	sevseg.refresh_target += 1;
+
+	if (sevseg.refresh_target > SEVSEG_QTY_DIGITS - 1){ // -1 because digits are 0-indexed
+		sevseg.refresh_target = 0;
+	}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -478,7 +487,6 @@ static void SEVSEG_Init(){
 	sevseg.digit_select[4].DS_port = DIGIT_SEL_4_GPIO_Port;
 	sevseg.digit_select[4].current_char_index = 0;
 
-	sevseg.cycle_state = CYCLE_STATE_0;
 	sevseg.refresh_target = ENUM_SEVSEG_DIGIT_0;
 
 }

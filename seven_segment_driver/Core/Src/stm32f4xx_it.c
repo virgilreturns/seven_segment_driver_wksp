@@ -60,7 +60,6 @@ extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim2;
 /* USER CODE BEGIN EV */
 extern SEVSEG_DISPLAY_TypeDef sevseg;
-extern DEBOUNCE_Typedef button_debounce;
 extern enum ENUM_SEVSEG_DIGIT refresh_target;
 /* USER CODE END EV */
 

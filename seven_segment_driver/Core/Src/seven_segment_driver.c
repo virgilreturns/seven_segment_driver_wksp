@@ -92,7 +92,7 @@ const uint16_t INDEX_FROM_ENUM[0x102] = {
     [ENUM_SEVSEG_CHAR_Blank] = 27
 };
 
-const enum ENUM_SEVSEG_CHAR SEVSEG_CHAR_ARRAY[] = {
+ enum ENUM_SEVSEG_CHAR SEVSEG_CHAR_ARRAY[] = {
     ENUM_SEVSEG_CHAR_0,
     ENUM_SEVSEG_CHAR_1,
     ENUM_SEVSEG_CHAR_2,
@@ -130,9 +130,9 @@ void SEVSEG_StoreDataBuf(SEVSEG_DISPLAY_TypeDef* sevseg, enum ENUM_SEVSEG_CHAR d
 };
 
 HAL_StatusTypeDef SEVSEG_DigitTx(SEVSEG_DISPLAY_TypeDef* sevseg) {
-
+	enum ENUM_SEVSEG_CHAR temp = SEVSEG_CHAR_ARRAY[(sevseg->digit_select[sevseg->refresh_target].current_char_index)];
 	// write data through MOSI (SPI2 handler)
-    HAL_StatusTypeDef success = HAL_SPI_Transmit_IT(sevseg->spi_handler, &(SEVSEG_CHAR_ARRAY[(sevseg->digit_select[sevseg->refresh_target].current_char_index)]), 1); //send data through MOSI pin
+    HAL_StatusTypeDef success = HAL_SPI_Transmit(sevseg->spi_handler, &(SEVSEG_CHAR_ARRAY[(sevseg->digit_select[sevseg->refresh_target].current_char_index)]), 1, 1000); //send data through MOSI pin
 	if (success != HAL_OK) return success; //if error, return error code
 
 	return success;
@@ -142,28 +142,6 @@ HAL_StatusTypeDef SEVSEG_DigitTx(SEVSEG_DISPLAY_TypeDef* sevseg) {
 
 // Array of all ENUM_SEVSEG_CHAR values
 
-
-void SEVSEG_Cycle(SEVSEG_DISPLAY_TypeDef* sevseg, TIM_HandleTypeDef* htim1, TIM_HandleTypeDef* htim2) {
-
-switch ((sevseg->cycle_state)) {
-case CYCLE_STATE_0:
-    break;
-case CYCLE_STATE_1:
-	sevseg->cycle_state = CYCLE_STATE_0;
-    SEVSEG_DigitTx(sevseg);
-    break;
-case CYCLE_STATE_2:
-	sevseg->cycle_state = CYCLE_STATE_0;
-    HAL_TIM_Base_Start_IT(htim1);
-    break;
-case CYCLE_STATE_3: // digital selection pulse
-    HAL_GPIO_WritePin(DIGIT_SEL_PINS_ARRAY[(sevseg->refresh_target)].port, DIGIT_SEL_PINS_ARRAY[(sevseg->refresh_target)].pin, GPIO_PIN_SET);
-    sevseg->cycle_state = CYCLE_STATE_0;
-    HAL_TIM_Base_Start_IT(htim2);
-
-    break;
-	}
-}
 
 
 const enum ENUM_SEVSEG_CHAR ASCII_to_SEVSEG_CHAR[255] = {
