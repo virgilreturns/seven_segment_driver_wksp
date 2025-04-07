@@ -136,8 +136,7 @@ int main(void)
 	//SEVSEG_DigitTx(&sevseg);
 	//HAL_SPI_Transmit(&hspi2, myDataa[0],1,1000);
 	  enum ENUM_SEVSEG_CHAR TEMP = SEVSEG_CHAR_ARRAY[sevseg.digit_select[sevseg.refresh_target].current_char_index];
-	  //HAL_SPI_Transmit(&hspi2, &(SEVSEG_CHAR_ARRAY[sevseg.digit_select[sevseg.refresh_target].current_char_index]),1,1000);
-	  HAL_SPI_Transmit(&hspi2, myDataa2[0],1,1000);
+	  HAL_SPI_Transmit(&hspi2, &(SEVSEG_CHAR_ARRAY[sevseg.digit_select[sevseg.refresh_target].current_char_index]),1,1000);
 /*
 	HAL_GPIO_WritePin(SPI_LATCH_GPIO_Port, SPI_LATCH_Pin, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(SPI_LATCH_GPIO_Port, SPI_LATCH_Pin, GPIO_PIN_RESET);
