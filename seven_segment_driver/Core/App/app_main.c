@@ -13,6 +13,11 @@ extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim2;
 extern SEVSEG_DISPLAY_TypeDef sevseg;
 
+volatile static bool UI_CURSOR_PRESSED = false;
+volatile static bool UI_COUNTUP_PRESSED = false;
+volatile static bool UI_COUNTDOWN_PRESSED = false;
+volatile static bool debounce = true;
+
 volatile enum ENUM_SEVSEG_DIGIT cursor_selection = ENUM_SEVSEG_DIGIT_0; //maybe add a UI handler
 GPIO_PIN_TypeDef DIGIT_SEL_PINS_ARRAY[];
 
@@ -25,22 +30,48 @@ int app_main(){
 
 SEVSEG_Init();
 
-uint8_t myDataa[5] = {ENUM_SEVSEG_CHAR_H,
+	uint8_t myDataa[5] = {ENUM_SEVSEG_CHAR_H,
 					  ENUM_SEVSEG_CHAR_E,
 					  ENUM_SEVSEG_CHAR_L,
 					  ENUM_SEVSEG_CHAR_L,
 					  ENUM_SEVSEG_CHAR_o};
 
-SEVSEG_StoreDataBuf(&sevseg, myDataa);
+	SEVSEG_StoreDataBuf(&sevseg, myDataa);
 
 	volatile enum ENUM_SEVSEG_CHAR test1;
+
+	/* |||||||||||||||||||||  LOOP  ||||||||||||||||||||||||| */
+
 	while(1){
 
-		//HAL_SPI_Transmit(&hspi2, myDataa[0], 1, 100); Unit Test 1
+		/* Task 1: Process Inputs
+
+		if (debounce) {
+			debounce = false;
+			if (UI_CURSOR_PRESSED) {
+				UI_CURSOR_PRESSED = false;
+
+
+
+			} else if (UI_COUNTUP_PRESSED){
+				UI_COUNTUP_PRESSED = false;
+
+
+
+			} else if (UI_COUNTDOWN_PRESSED){
+				UI_COUNTUP_PRESSED = false;
+
+
+			}
+
+
+
+		} /* debounce */
+
+		/* Task 2: Render Display */
 
 		test1 = SEVSEG_ReadDigitData(&sevseg, sevseg.refresh_target);
-		//HAL_SPI_Transmit(&hspi2, &SEVSEG_CHAR_ARRAY[sevseg->digit_select[sevseg->refresh_target].current_char_index] , 1, 100); Unit Test 2
-
+		HAL_SPI_Transmit(&hspi2, &SEVSEG_CHAR_ARRAY[sevseg.digit_select[sevseg.refresh_target].current_char_index] , 1, 100);
 		HAL_GPIO_WritePin(SPI_LATCH_GPIO_Port, SPI_LATCH_Pin, GPIO_PIN_SET);
 		HAL_GPIO_WritePin(SPI_LATCH_GPIO_Port, SPI_LATCH_Pin, GPIO_PIN_RESET);
 
@@ -66,7 +97,7 @@ SEVSEG_StoreDataBuf(&sevseg, myDataa);
 static void SEVSEG_Init(){
 
 	// contiguous array of GPIO pins, used for multiplexing displays
-	GPIO_PIN_TypeDef DIGIT_SEL_PINS_ARRAY[SEVSEG_QTY_DIGITS] = {
+	GPIO_PIN_TypeDef DIGIT_SEL_PINS_ARRAY[8] = {
 			[ENUM_SEVSEG_DIGIT_0].port = DIGIT_SEL_0_GPIO_Port,
 			[ENUM_SEVSEG_DIGIT_0].pin = DIGIT_SEL_0_Pin,
 			[ENUM_SEVSEG_DIGIT_1].port = DIGIT_SEL_1_GPIO_Port,

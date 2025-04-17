@@ -3,6 +3,9 @@
 
 #include "main.h"
 
+#define SEVSEG_QTY_DIGITS 8
+
+
 typedef enum __DEBOUNCE_STATE {
 	DEBOUNCE_FALSE = 0,
 	DEBOUNCE_TRUE = 1

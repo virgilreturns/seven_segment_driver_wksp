@@ -103,7 +103,6 @@ int app_main();
 
 /* USER CODE BEGIN Private defines */
 
-#define SEVSEG_QTY_DIGITS 5
 #define DIGIT_SEL_Timer TIM2
 #define SPI_LATCH_Timer TIM1
 
