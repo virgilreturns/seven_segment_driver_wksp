@@ -48,13 +48,9 @@ TIM_HandleTypeDef htim2;
 
 /* USER CODE BEGIN PV */
 
-<<<<<<< Upstream, based on branch 'master' of https://github.com/virgilreturns/seven_segment_driver_wksp.git
 SEVSEG_DISPLAY_TypeDef sevseg;
 GPIO_PIN_TypeDef DIGIT_SEL_PINS_ARRAY[SEVSEG_QTY_DIGITS];
-=======
 
-
->>>>>>> 432b44a hmm
 
 /* USER CODE END PV */
 
@@ -65,12 +61,8 @@ static void MX_SPI2_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
-<<<<<<< Upstream, based on branch 'master' of https://github.com/virgilreturns/seven_segment_driver_wksp.git
-=======
-void SEVSEG_Init();
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef*);
-void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef*);
->>>>>>> 432b44a hmm
+
+
 
 /* USER CODE END PFP */
 
@@ -96,7 +88,6 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-  SEVSEG_Init();
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -112,10 +103,9 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-<<<<<<< Upstream, based on branch 'master' of https://github.com/virgilreturns/seven_segment_driver_wksp.git
-=======
+
   app_main();
->>>>>>> 432b44a hmm
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -421,10 +411,7 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-<<<<<<< Upstream, based on branch 'master' of https://github.com/virgilreturns/seven_segment_driver_wksp.git
-=======
 
->>>>>>> 432b44a hmm
 
 /* USER CODE END 4 */
 

@@ -58,10 +58,6 @@
 
 #include "seven_segment_driver.h"
 
-typedef struct __GPIO_PIN_TYPEDEF{
-	GPIO_TypeDef* port;
-	uint16_t pin;
-} GPIO_PIN_TypeDef;
 
 extern GPIO_PIN_TypeDef DIGIT_SEL_PINS_ARRAY[SEVSEG_QTY_DIGITS];
 
@@ -128,11 +124,47 @@ const uint16_t INDEX_FROM_ENUM[0x102] = {
     ENUM_SEVSEG_CHAR_Blank
     };
 
+ const enum ENUM_SEVSEG_CHAR ASCII_to_SEVSEG_CHAR[255] = {
+     ['0'] = ENUM_SEVSEG_CHAR_0,
+     ['1'] = ENUM_SEVSEG_CHAR_1,
+     ['2'] = ENUM_SEVSEG_CHAR_2,
+     ['3'] = ENUM_SEVSEG_CHAR_3,
+     ['4'] = ENUM_SEVSEG_CHAR_4,
+     ['5'] = ENUM_SEVSEG_CHAR_5,
+     ['6'] = ENUM_SEVSEG_CHAR_6,
+     ['7'] = ENUM_SEVSEG_CHAR_7,
+     ['8'] = ENUM_SEVSEG_CHAR_8,
+     ['9'] = ENUM_SEVSEG_CHAR_9,
+     ['A'] = ENUM_SEVSEG_CHAR_A,
+     ['B'] = ENUM_SEVSEG_CHAR_B,
+     ['C'] = ENUM_SEVSEG_CHAR_C,
+     ['D'] = ENUM_SEVSEG_CHAR_D,
+     ['E'] = ENUM_SEVSEG_CHAR_E,
+     ['F'] = ENUM_SEVSEG_CHAR_F,
+     ['h'] = ENUM_SEVSEG_CHAR_h,
+     ['H'] = ENUM_SEVSEG_CHAR_H,
+     ['L'] = ENUM_SEVSEG_CHAR_L,
+     ['n'] = ENUM_SEVSEG_CHAR_n,
+     ['o'] = ENUM_SEVSEG_CHAR_o,
+     ['P'] = ENUM_SEVSEG_CHAR_P,
+     ['r'] = ENUM_SEVSEG_CHAR_r,
+     ['t'] = ENUM_SEVSEG_CHAR_t,
+     ['U'] = ENUM_SEVSEG_CHAR_U,
+     ['Y'] = ENUM_SEVSEG_CHAR_Y,
+     ['-'] = ENUM_SEVSEG_CHAR_Dash,
+     [' '] = ENUM_SEVSEG_CHAR_Blank,
+ };
+
+//stores look-up indexes (user-defined-pointers) into each DIGIT in sevseg.digits_select[DIGIT]
 void SEVSEG_StoreDataBuf(SEVSEG_DISPLAY_TypeDef* sevseg, enum ENUM_SEVSEG_CHAR data[]) {
 	for (int i = 0; i < SEVSEG_QTY_DIGITS; i++) {
 		sevseg->digit_select[i].current_char_index = INDEX_FROM_ENUM[data[i]];
 	}
 };
+
+enum ENUM_SEVSEG_CHAR SEVSEG_ReadDigitData(SEVSEG_DISPLAY_TypeDef *sevseg, enum ENUM_SEVSEG_DIGIT target) {
+	return SEVSEG_CHAR_ARRAY[sevseg->digit_select[target].current_char_index];
+}
 
 HAL_StatusTypeDef SEVSEG_DigitTx(SEVSEG_DISPLAY_TypeDef* sevseg) {
 	enum ENUM_SEVSEG_CHAR temp = SEVSEG_CHAR_ARRAY[(sevseg->digit_select[sevseg->refresh_target].current_char_index)];
@@ -149,36 +181,7 @@ HAL_StatusTypeDef SEVSEG_DigitTx(SEVSEG_DISPLAY_TypeDef* sevseg) {
 
 
 
-const enum ENUM_SEVSEG_CHAR ASCII_to_SEVSEG_CHAR[255] = {
-    ['0'] = ENUM_SEVSEG_CHAR_0,
-    ['1'] = ENUM_SEVSEG_CHAR_1,
-    ['2'] = ENUM_SEVSEG_CHAR_2,
-    ['3'] = ENUM_SEVSEG_CHAR_3,
-    ['4'] = ENUM_SEVSEG_CHAR_4,
-    ['5'] = ENUM_SEVSEG_CHAR_5,
-    ['6'] = ENUM_SEVSEG_CHAR_6,
-    ['7'] = ENUM_SEVSEG_CHAR_7,
-    ['8'] = ENUM_SEVSEG_CHAR_8,
-    ['9'] = ENUM_SEVSEG_CHAR_9,
-    ['A'] = ENUM_SEVSEG_CHAR_A,
-    ['B'] = ENUM_SEVSEG_CHAR_B,
-    ['C'] = ENUM_SEVSEG_CHAR_C,
-    ['D'] = ENUM_SEVSEG_CHAR_D,
-    ['E'] = ENUM_SEVSEG_CHAR_E,
-    ['F'] = ENUM_SEVSEG_CHAR_F,
-    ['h'] = ENUM_SEVSEG_CHAR_h,
-    ['H'] = ENUM_SEVSEG_CHAR_H,
-    ['L'] = ENUM_SEVSEG_CHAR_L,
-    ['n'] = ENUM_SEVSEG_CHAR_n,
-    ['o'] = ENUM_SEVSEG_CHAR_o,
-    ['P'] = ENUM_SEVSEG_CHAR_P,
-    ['r'] = ENUM_SEVSEG_CHAR_r,
-    ['t'] = ENUM_SEVSEG_CHAR_t,
-    ['U'] = ENUM_SEVSEG_CHAR_U,
-    ['Y'] = ENUM_SEVSEG_CHAR_Y,
-    ['-'] = ENUM_SEVSEG_CHAR_Dash,
-    [' '] = ENUM_SEVSEG_CHAR_Blank,
-};
+
 
 
 

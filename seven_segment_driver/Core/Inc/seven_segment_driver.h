@@ -3,11 +3,6 @@
 
 #include "main.h"
 
-#define SEVSEG_QTY_DIGITS 5
-
-extern const uint16_t INDEX_FROM_ENUM[];
-
-
 typedef enum __DEBOUNCE_STATE {
 	DEBOUNCE_FALSE = 0,
 	DEBOUNCE_TRUE = 1
@@ -44,8 +39,6 @@ enum ENUM_SEVSEG_CHAR {
 	ENUM_SEVSEG_CHAR_Blank = 0xFF
 };
 
-extern enum ENUM_SEVSEG_CHAR SEVSEG_CHAR_ARRAY[];
-
 enum ENUM_SEVSEG_DIGIT { //digit index
 	ENUM_SEVSEG_DIGIT_0 = 0,
 	ENUM_SEVSEG_DIGIT_1 = 1,
@@ -54,7 +47,7 @@ enum ENUM_SEVSEG_DIGIT { //digit index
 	ENUM_SEVSEG_DIGIT_4 = 4,
 	ENUM_SEVSEG_DIGIT_5 = 5,
 	ENUM_SEVSEG_DIGIT_6 = 6,
-	ENUM_SEVSEG_DIGIT_7 = 7
+	ENUM_SEVSEG_DIGIT_7 = 7, // max = 8 total
 };
 
 
@@ -70,8 +63,11 @@ typedef struct {
 	enum ENUM_SEVSEG_DIGIT refresh_target;
 } SEVSEG_DISPLAY_TypeDef;
 
+extern enum ENUM_SEVSEG_CHAR SEVSEG_CHAR_ARRAY[];
+extern const uint16_t INDEX_FROM_ENUM[];
 
 void SEVSEG_StoreDataBuf(SEVSEG_DISPLAY_TypeDef* seveg, enum ENUM_SEVSEG_CHAR data[]);
+enum ENUM_SEVSEG_CHAR SEVSEG_ReadDigitData(SEVSEG_DISPLAY_TypeDef*, enum ENUM_SEVSEG_DIGIT);
 HAL_StatusTypeDef SEVSEG_DigitTx(SEVSEG_DISPLAY_TypeDef* sevseg);
 HAL_StatusTypeDef SEVSEG_Write(SEVSEG_DISPLAY_TypeDef* sevseg);
 void SEVSEG_Cycle();

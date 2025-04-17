@@ -35,13 +35,16 @@ extern "C" {
 #include <stdint.h>
 #include "seven_segment_driver.h"
 #include <stdbool.h>
-
+#include "app_config.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
 
-
+typedef struct{
+	GPIO_TypeDef* port;
+	uint16_t pin;
+} GPIO_PIN_TypeDef;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
