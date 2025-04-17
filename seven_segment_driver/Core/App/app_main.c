@@ -2,7 +2,6 @@
  * app_main.c
  *
  *  Created on: Apr 16, 2025
-<<<<<<< Upstream, based on branch 'master' of https://github.com/virgilreturns/seven_segment_driver_wksp.git
  *      Author: virgilreturns
  */
 
@@ -42,7 +41,7 @@ SEVSEG_Init();
 
 	/* |||||||||||||||||||||  LOOP  ||||||||||||||||||||||||| */
 
-	while(1){
+	while(1) {
 
 		/* Task 1: Process Inputs
 
@@ -50,7 +49,6 @@ SEVSEG_Init();
 			debounce = false;
 			if (UI_CURSOR_PRESSED) {
 				UI_CURSOR_PRESSED = false;
-
 
 
 			} else if (UI_COUNTUP_PRESSED){
@@ -63,8 +61,6 @@ SEVSEG_Init();
 
 
 			}
-
-
 
 		} /* debounce */
 

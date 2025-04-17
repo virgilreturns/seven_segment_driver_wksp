@@ -9,10 +9,6 @@
 #define APP_APP_CONFIG_H_
 
 
-#define SEVSEG_QTY_DIGITS 5
-
-
-
 
 
 
