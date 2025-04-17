@@ -49,12 +49,7 @@ TIM_HandleTypeDef htim2;
 /* USER CODE BEGIN PV */
 
 SEVSEG_DISPLAY_TypeDef sevseg;
-//volatile DEBOUNCE_Typedef button_debounce;
-//enum ENUM_SEVSEG_DIGIT refresh_target; //used to cycle through array of digits
-GPIO_PIN_TypeDef DIGIT_SEL_PINS_ARRAY[SEVSEG_QTY_DIGITS]; //containing gpio pins of all digits
-//volatile CYCLE_STATE cycle_state;
-//volatile uint8_t tim1up, tim2up;
-
+GPIO_PIN_TypeDef DIGIT_SEL_PINS_ARRAY[SEVSEG_QTY_DIGITS];
 
 /* USER CODE END PV */
 
@@ -65,29 +60,12 @@ static void MX_SPI2_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
-static void SEVSEG_Init();
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef*);
-void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef*);
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-volatile enum ENUM_SEVSEG_CHAR data[SEVSEG_QTY_DIGITS] =
-{ ENUM_SEVSEG_CHAR_H, ENUM_SEVSEG_CHAR_E, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_o };
-
-volatile enum ENUM_SEVSEG_DIGIT cursor_selection = ENUM_SEVSEG_DIGIT_0;
-
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim){
-}
-
-void HAL_GPIO_EXTI_Callback(uint16_t pin){
-	return;
-}
-
-void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef* hspi){
-}
 
 /* USER CODE END 0 */
 
@@ -123,9 +101,6 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  uint8_t myDataa[5] = {ENUM_SEVSEG_CHAR_H, ENUM_SEVSEG_CHAR_E, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_o};
-  uint8_t myDataa2[5] = {8, ENUM_SEVSEG_CHAR_E, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_L, ENUM_SEVSEG_CHAR_o};
-  SEVSEG_StoreDataBuf(&sevseg, myDataa); //stores enum indexes (user-defined-pointers) into each DIGIT in sevseg.digits_select[DIGIT]
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -450,45 +425,6 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-static void SEVSEG_Init(){
-
-	GPIO_PIN_TypeDef DIGIT_SEL_PINS_ARRAY[SEVSEG_QTY_DIGITS] = {
-			[ENUM_SEVSEG_DIGIT_0].port = DIGIT_SEL_0_GPIO_Port,
-			[ENUM_SEVSEG_DIGIT_0].pin = DIGIT_SEL_0_Pin,
-			[ENUM_SEVSEG_DIGIT_1].port = DIGIT_SEL_1_GPIO_Port,
-			[ENUM_SEVSEG_DIGIT_1].pin = DIGIT_SEL_1_Pin,
-			[ENUM_SEVSEG_DIGIT_2].port = DIGIT_SEL_2_GPIO_Port,
-			[ENUM_SEVSEG_DIGIT_2].pin = DIGIT_SEL_2_Pin,
-			[ENUM_SEVSEG_DIGIT_3].port = DIGIT_SEL_3_GPIO_Port,
-			[ENUM_SEVSEG_DIGIT_3].pin = DIGIT_SEL_3_Pin,
-			[ENUM_SEVSEG_DIGIT_4].port = DIGIT_SEL_4_GPIO_Port,
-			[ENUM_SEVSEG_DIGIT_4].pin = DIGIT_SEL_4_Pin,
-
-	};
-
-	sevseg.digit_select[0].DS_pin = DIGIT_SEL_0_Pin;
-	sevseg.digit_select[0].DS_port = DIGIT_SEL_0_GPIO_Port;
-	sevseg.digit_select[0].current_char_index = 0;
-
-	sevseg.digit_select[1].DS_pin = DIGIT_SEL_1_Pin;
-	sevseg.digit_select[1].DS_port = DIGIT_SEL_1_GPIO_Port;
-	sevseg.digit_select[1].current_char_index = 0;
-
-	sevseg.digit_select[2].DS_pin = DIGIT_SEL_2_Pin;
-	sevseg.digit_select[2].DS_port = DIGIT_SEL_2_GPIO_Port;
-	sevseg.digit_select[2].current_char_index = 0;
-
-	sevseg.digit_select[3].DS_pin = DIGIT_SEL_3_Pin;
-	sevseg.digit_select[3].DS_port = DIGIT_SEL_3_GPIO_Port;
-	sevseg.digit_select[3].current_char_index = 0;
-
-	sevseg.digit_select[4].DS_pin = DIGIT_SEL_4_Pin;
-	sevseg.digit_select[4].DS_port = DIGIT_SEL_4_GPIO_Port;
-	sevseg.digit_select[4].current_char_index = 0;
-
-	sevseg.refresh_target = ENUM_SEVSEG_DIGIT_0;
-
-}
 
 /* USER CODE END 4 */
 
