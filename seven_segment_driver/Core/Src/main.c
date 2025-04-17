@@ -48,8 +48,13 @@ TIM_HandleTypeDef htim2;
 
 /* USER CODE BEGIN PV */
 
+<<<<<<< Upstream, based on branch 'master' of https://github.com/virgilreturns/seven_segment_driver_wksp.git
 SEVSEG_DISPLAY_TypeDef sevseg;
 GPIO_PIN_TypeDef DIGIT_SEL_PINS_ARRAY[SEVSEG_QTY_DIGITS];
+=======
+
+
+>>>>>>> 432b44a hmm
 
 /* USER CODE END PV */
 
@@ -60,6 +65,12 @@ static void MX_SPI2_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
+<<<<<<< Upstream, based on branch 'master' of https://github.com/virgilreturns/seven_segment_driver_wksp.git
+=======
+void SEVSEG_Init();
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef*);
+void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef*);
+>>>>>>> 432b44a hmm
 
 /* USER CODE END PFP */
 
@@ -101,31 +112,16 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
+<<<<<<< Upstream, based on branch 'master' of https://github.com/virgilreturns/seven_segment_driver_wksp.git
+=======
+  app_main();
+>>>>>>> 432b44a hmm
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-
-	//SEVSEG_DigitTx(&sevseg);
-	//HAL_SPI_Transmit(&hspi2, myDataa[0],1,1000);
-	  enum ENUM_SEVSEG_CHAR TEMP = SEVSEG_CHAR_ARRAY[sevseg.digit_select[sevseg.refresh_target].current_char_index];
-	  HAL_SPI_Transmit(&hspi2, &(SEVSEG_CHAR_ARRAY[sevseg.digit_select[sevseg.refresh_target].current_char_index]),1,1000);
-/*
-	HAL_GPIO_WritePin(SPI_LATCH_GPIO_Port, SPI_LATCH_Pin, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(SPI_LATCH_GPIO_Port, SPI_LATCH_Pin, GPIO_PIN_RESET);
-
-	SEVSEG_DIGIT_TypeDef *temp = &(sevseg.digit_select[sevseg.refresh_target]);
-	HAL_GPIO_WritePin(temp->DS_port, temp->DS_pin, GPIO_PIN_SET);
-	//HAL_Delay(10);
-	HAL_GPIO_WritePin(temp->DS_port, temp->DS_pin, GPIO_PIN_RESET);
-	
-	sevseg.refresh_target += 1;
-
-	if (sevseg.refresh_target > SEVSEG_QTY_DIGITS - 1){ // -1 because digits are 0-indexed
-		sevseg.refresh_target = 0;
-	}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -425,6 +421,10 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+<<<<<<< Upstream, based on branch 'master' of https://github.com/virgilreturns/seven_segment_driver_wksp.git
+=======
+
+>>>>>>> 432b44a hmm
 
 /* USER CODE END 4 */
 

@@ -58,6 +58,11 @@
 
 #include "seven_segment_driver.h"
 
+typedef struct __GPIO_PIN_TYPEDEF{
+	GPIO_TypeDef* port;
+	uint16_t pin;
+} GPIO_PIN_TypeDef;
+
 extern GPIO_PIN_TypeDef DIGIT_SEL_PINS_ARRAY[SEVSEG_QTY_DIGITS];
 
 

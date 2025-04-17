@@ -7,7 +7,8 @@
             "intelliSenseMode": "${default}",
             "includePath": [
                 "${default}",
-                "${workspaceFolder}/seven_segment_driver/Core/Inc"
+                "${workspaceFolder}/seven_segment_driver/Core/Inc",
+                "${workspaceFolder}/seven_segment_driver/Drivers/STM32F4xx_HAL_Driver/Inc"
             ]
         }
     ]
