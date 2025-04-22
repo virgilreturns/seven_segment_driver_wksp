@@ -1,3 +1,10 @@
+\\\\\\\\\\\ DISCONTINUED ///////////
+
+PROJECT HAS BEEN MOVED TO REPOSITORY "seven-segment-display"
+REASON: STM32CubeMX code generation error
+
+||||||||||||||||||||||||||||||||||||
+
 Personal Project: "seven_segment-driver_wksp"
 
 Full description:
